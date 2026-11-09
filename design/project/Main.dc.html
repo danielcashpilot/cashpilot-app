@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>CashPilot בית</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#1F4FBF}a:hover{color:#163a8f}
+</style>
+</helmet>
+<div dir="rtl" style="width: 390px; height: 1040px; position: relative; box-sizing: border-box; background: {{t.bg}}; font-family: Rubik, system-ui, sans-serif; color: {{t.ink}}; overflow: hidden">
+<div style="padding: 28px 20px 110px; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<h1 style="margin: 0; font-size: 26px; font-weight: 600">ערב טוב</h1>
+<span style="font-size: 14px; color: {{t.muted}}">נובמבר 2026</span>
+</div>
+
+<div style="background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 14px; color: {{t.muted}}">נשאר לך החודש</span>
+<span style="font-size: 40px; font-weight: 600; letter-spacing: -0.5px">₪3,140</span>
+<div style="height: 10px; background: {{t.track}}; border-radius: 99px; overflow: hidden"><div style="width: 66%; height: 100%; background: {{t.fill}}; border-radius: 99px"></div></div>
+<div style="display: flex; justify-content: space-between; font-size: 13px; color: {{t.muted}}"><span>הוצאת ₪6,074 מתוך ₪9,214</span><span>18 ימים למשכורת</span></div>
+</div>
+
+<div style="display: flex; gap: 14px; font-size: 14px; padding: 12px 14px; background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 14px">
+<span style="color: {{t.rtx}}; font-weight: 500">2 בעיות</span>
+<span style="color: {{t.otx}}; font-weight: 500">4 שים לב</span>
+<span style="color: {{t.gtx}}; font-weight: 500">5 בסדר</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 17px; font-weight: 600">מה כדאי לטפל בו</h2>
+<a href="{{L.payslip}}" style="text-decoration: none; color: inherit; background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 14px; padding: 14px; display: flex; gap: 12px; align-items: flex-start">
+<span style="flex: none; width: 34px; height: 34px; border-radius: 10px; background: {{t.rbg}}; color: {{t.rtx}}; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v6M12 16.5v.5"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 500; font-size: 15px">חסרים ₪312 בהפקדה לפנסיה</span><span style="font-size: 13px; color: {{t.muted}}">תלוש אוקטובר · המעסיק הפקיד 6% במקום 6.5%</span></span>
+</a>
+<a href="{{L.payslip}}" style="text-decoration: none; color: inherit; background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 14px; padding: 14px; display: flex; gap: 12px; align-items: flex-start">
+<span style="flex: none; width: 34px; height: 34px; border-radius: 10px; background: {{t.rbg}}; color: {{t.rtx}}; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v6M12 16.5v.5"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 500; font-size: 15px">שעות נוספות שולמו בחסר: ₪65</span><span style="font-size: 13px; color: {{t.muted}}">תלוש אוקטובר · 4 שעות חושבו כשעות רגילות</span></span>
+</a>
+<div style="background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 14px; padding: 14px; display: flex; gap: 12px; align-items: flex-start">
+<span style="flex: none; width: 34px; height: 34px; border-radius: 10px; background: {{t.obg}}; color: {{t.otx}}; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 18H2z"></path><path d="M12 10v4M12 17v.5"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 500; font-size: 15px">חיוב כפול של ₪49.90</span><span style="font-size: 13px; color: {{t.muted}}">אשראי · אותו מנוי סטרימינג פעמיים באוקטובר</span></span>
+</div>
+<a href="{{L.compare}}" style="text-decoration: none; color: inherit; background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 14px; padding: 14px; display: flex; gap: 12px; align-items: flex-start">
+<span style="flex: none; width: 34px; height: 34px; border-radius: 10px; background: {{t.obg}}; color: {{t.otx}}; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 18H2z"></path><path d="M12 10v4M12 17v.5"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 500; font-size: 15px">חשבון החשמל עלה ב-₪86</span><span style="font-size: 13px; color: {{t.muted}}">לעומת ספטמבר · כנראה המזגן</span></span>
+</a>
+<a href="{{L.payslip}}" style="font-size: 14px; text-decoration: none; color: {{t.link}}; min-height: 44px; display: flex; align-items: center">עוד 2 דברים לבדוק</a>
+</div>
+
+<div style="background: {{t.inv}}; color: {{t.invInk}}; border-radius: 18px; padding: 16px 18px; display: flex; justify-content: space-between; align-items: center">
+<span style="font-size: 14px; line-height: 1.4">מצאנו לך עד עכשיו<br>כסף שאפשר להחזיר</span>
+<span style="font-size: 28px; font-weight: 600">₪1,301</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><h2 style="margin: 0; font-size: 17px; font-weight: 600">מסמכים אחרונים</h2><a href="{{L.upload}}" style="font-size: 14px; text-decoration: none; color: {{t.link}}">הוסף</a></div>
+<div style="background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 14px">
+<a href="{{L.payslip}}" style="text-decoration: none; color: inherit; display: flex; justify-content: space-between; padding: 13px 14px; border-bottom: 1px solid {{t.line2}}; font-size: 15px"><span>תלוש שכר · אוקטובר</span><span style="color: {{t.rtx}}; font-size: 13px">2 בעיות</span></a>
+<div style="display: flex; justify-content: space-between; padding: 13px 14px; border-bottom: 1px solid {{t.line2}}; font-size: 15px"><span>פירוט אשראי · אוקטובר</span><span style="color: {{t.otx}}; font-size: 13px">שים לב</span></div>
+<div style="display: flex; justify-content: space-between; padding: 13px 14px; font-size: 15px"><span>חשבון חשמל · הגיע במייל</span><span style="color: {{t.otx}}; font-size: 13px">שים לב</span></div>
+</div>
+</div>
+</div>
+
+<a href="{{L.chat}}" style="position: absolute; left: 18px; bottom: 90px; height: 50px; padding: 0 18px; border-radius: 99px; background: {{t.btn}}; color: {{t.btnInk}}; text-decoration: none; display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 500"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"></path></svg>שאל</a>
+
+<nav style="position: absolute; bottom: 0; left: 0; right: 0; height: 72px; background: {{t.card}}; border-top: 1px solid {{t.line}}; display: flex; justify-content: space-around; align-items: center">
+<a href="{{L.main}}" style="text-decoration: none; color: {{t.link}}; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; min-width: 60px; min-height: 44px; justify-content: center"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9H15v-6H9v6H3z"></path></svg>בית</a>
+<a href="{{L.upload}}" style="text-decoration: none; color: {{t.muted}}; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; min-width: 60px; min-height: 44px; justify-content: center"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>הוספה</a>
+<a href="{{L.compare}}" style="text-decoration: none; color: {{t.muted}}; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; min-width: 60px; min-height: 44px; justify-content: center"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V11M12 20V5M19 20v-6"></path></svg>מעקב</a>
+<a href="{{L.chat}}" style="text-decoration: none; color: {{t.muted}}; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; min-width: 60px; min-height: 44px; justify-content: center"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"></path></svg>צ'אט</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":1040}}'>
+class Component extends DCLogic {
+renderVals() {
+const T={light:{bg:'#F6F5F1',card:'#FFFFFF',line:'#E6E3DC',line2:'#EFEDE7',ink:'#1D1C1A',muted:'#5F5C55',link:'#1F4FBF',btn:'#1F4FBF',btnInk:'#FFFFFF',soft:'#F1EFEA',field:'#F6F5F1',border2:'#D6D2C8',inv:'#1D1C1A',invInk:'#F6F5F1',track:'#EFEDE7',fill:'#1D1C1A',rbg:'#FBE8E6',rtx:'#A8231A',obg:'#FCEFD8',otx:'#8F4A00',gtx:'#1B6B3E',bar:'#C9D5F2',ibg:'#EEF2FC',dash:'#C9C5BB',axis:'#8A867D'},dark:{bg:'#141412',card:'#1E1D1B',line:'#2F2D29',line2:'#2A2925',ink:'#EDEBE6',muted:'#A6A29A',link:'#8FB0FF',btn:'#3D6AE0',btnInk:'#FFFFFF',soft:'#2A2925',field:'#141412',border2:'#3A3833',inv:'#2B2A26',invInk:'#EDEBE6',track:'#2A2925',fill:'#EDEBE6',rbg:'#3A1F1C',rtx:'#FF9A8F',obg:'#3A2C15',otx:'#F2B35E',gtx:'#7BD39A',bar:'#34456E',ibg:'#1E2A47',dash:'#4A4741',axis:'#8A867D'}};
+const d = !!this.props.dark;
+const p = d ? 'Dark' : '';
+return { t: d ? T.dark : T.light, L: { main: p + 'Main.dc.html', upload: p + 'Upload.dc.html', payslip: p + 'Payslip.dc.html', compare: p + 'Compare.dc.html', chat: p + 'Chat.dc.html' } };
+}
+}
+</script>
+</body>
+</html>

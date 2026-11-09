@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>CashPilot הוספת מסמך</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#1F4FBF}a:hover{color:#163a8f}
+</style>
+</helmet>
+<div dir="rtl" style="width: 390px; height: 844px; position: relative; box-sizing: border-box; background: {{t.bg}}; font-family: Rubik, system-ui, sans-serif; color: {{t.ink}}; overflow: hidden">
+<div style="padding: 28px 20px 100px; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 26px; font-weight: 600">הוספת מסמך</h1>
+<span style="font-size: 15px; color: {{t.muted}}">תלוש, דף חשבון, פירוט אשראי או כל חשבון</span>
+</div>
+
+<div style="border: 2px dashed {{t.dash}}; border-radius: 18px; background: {{t.card}}; padding: 28px 18px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center">
+<span style="width: 52px; height: 52px; border-radius: 16px; background: {{t.ibg}}; color: {{t.link}}; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5M4 16v4h16v-4"></path></svg></span>
+<span style="font-size: 16px; font-weight: 500">גרור לכאן או צלם את המסמך</span>
+<span style="font-size: 13px; color: {{t.muted}}">עד 5 קבצים בבת אחת · PDF או תמונה</span>
+<div style="display: flex; gap: 10px">
+<button type="button" style="height: 44px; padding: 0 18px; border-radius: 12px; border: none; background: {{t.btn}}; color: {{t.btnInk}}; font-family: inherit; font-size: 15px; font-weight: 500">צלם</button>
+<button type="button" style="height: 44px; padding: 0 18px; border-radius: 12px; border: 1px solid {{t.border2}}; background: {{t.card}}; color: {{t.ink}}; font-family: inherit; font-size: 15px">בחר קובץ</button>
+</div>
+</div>
+
+<div style="background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 13px; color: {{t.muted}}">הועלה עכשיו</span>
+<div style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 15px">tlush_oct.pdf</span><span style="font-size: 13px; color: {{t.muted}}">2 עמודים</span></div>
+<span style="font-size: 15px">זיהינו: <b style="font-weight: 600">תלוש שכר, אוקטובר 2026</b></span>
+<div style="display: flex; gap: 10px">
+<a href="{{L.payslip}}" style="flex: 1; height: 44px; border-radius: 12px; background: {{t.fill}}; color: {{t.bg}}; text-decoration: none; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 500">פתח את הבדיקה</a>
+<button type="button" style="height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid {{t.border2}}; background: {{t.card}}; color: {{t.ink}}; font-family: inherit; font-size: 15px">זה משהו אחר</button>
+</div>
+</div>
+
+<div style="background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; gap: 10px; align-items: center"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 6h18v12H3z"></path><path d="M3 7l9 6 9-6"></path></svg><span style="font-size: 16px; font-weight: 500">או שהמסמכים יגיעו לבד</span></div>
+<span style="font-size: 14px; color: {{t.muted}}; line-height: 1.5">חשבונות שמגיעים אליך במייל יעברו לכתובת הזאת. אנחנו לא נכנסים לתיבת המייל שלך.</span>
+<div style="display: flex; justify-content: space-between; align-items: center; background: {{t.field}}; border-radius: 10px; padding: 10px 12px"><span dir="ltr" style="font-size: 14px; font-family: ui-monospace, monospace">noa.4821@in.cashpilot.co.il</span><button type="button" style="height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid {{t.border2}}; background: {{t.card}}; font-family: inherit; font-size: 14px; color: {{t.ink}}">העתק</button></div>
+<a href="{{L.main}}" style="font-size: 14px; text-decoration: none; color: {{t.link}}">הגדרת העברה אוטומטית · 2 דקות</a>
+</div>
+</div>
+
+<nav style="position: absolute; bottom: 0; left: 0; right: 0; height: 72px; background: {{t.card}}; border-top: 1px solid {{t.line}}; display: flex; justify-content: space-around; align-items: center">
+<a href="{{L.main}}" style="text-decoration: none; color: {{t.muted}}; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; min-width: 60px; min-height: 44px; justify-content: center"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9H15v-6H9v6H3z"></path></svg>בית</a>
+<a href="{{L.upload}}" style="text-decoration: none; color: {{t.link}}; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; min-width: 60px; min-height: 44px; justify-content: center"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>הוספה</a>
+<a href="{{L.compare}}" style="text-decoration: none; color: {{t.muted}}; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; min-width: 60px; min-height: 44px; justify-content: center"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V11M12 20V5M19 20v-6"></path></svg>מעקב</a>
+<a href="{{L.chat}}" style="text-decoration: none; color: {{t.muted}}; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; min-width: 60px; min-height: 44px; justify-content: center"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"></path></svg>צ'אט</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+const T={light:{bg:'#F6F5F1',card:'#FFFFFF',line:'#E6E3DC',line2:'#EFEDE7',ink:'#1D1C1A',muted:'#5F5C55',link:'#1F4FBF',btn:'#1F4FBF',btnInk:'#FFFFFF',soft:'#F1EFEA',field:'#F6F5F1',border2:'#D6D2C8',inv:'#1D1C1A',invInk:'#F6F5F1',track:'#EFEDE7',fill:'#1D1C1A',rbg:'#FBE8E6',rtx:'#A8231A',obg:'#FCEFD8',otx:'#8F4A00',gtx:'#1B6B3E',bar:'#C9D5F2',ibg:'#EEF2FC',dash:'#C9C5BB',axis:'#8A867D'},dark:{bg:'#141412',card:'#1E1D1B',line:'#2F2D29',line2:'#2A2925',ink:'#EDEBE6',muted:'#A6A29A',link:'#8FB0FF',btn:'#3D6AE0',btnInk:'#FFFFFF',soft:'#2A2925',field:'#141412',border2:'#3A3833',inv:'#2B2A26',invInk:'#EDEBE6',track:'#2A2925',fill:'#EDEBE6',rbg:'#3A1F1C',rtx:'#FF9A8F',obg:'#3A2C15',otx:'#F2B35E',gtx:'#7BD39A',bar:'#34456E',ibg:'#1E2A47',dash:'#4A4741',axis:'#8A867D'}};
+const d = !!this.props.dark;
+const p = d ? 'Dark' : '';
+return { t: d ? T.dark : T.light, L: { main: p + 'Main.dc.html', upload: p + 'Upload.dc.html', payslip: p + 'Payslip.dc.html', compare: p + 'Compare.dc.html', chat: p + 'Chat.dc.html' } };
+}
+}
+</script>
+</body>
+</html>

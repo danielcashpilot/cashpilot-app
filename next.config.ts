@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  devIndicators: false, // hide the "N" bubble so it does not cover the chat send button
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>CashPilot צ'אט</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#1F4FBF}a:hover{color:#163a8f}
+</style>
+</helmet>
+<div dir="rtl" style="width: 390px; height: 844px; position: relative; box-sizing: border-box; background: {{t.bg}}; font-family: Rubik, system-ui, sans-serif; color: {{t.ink}}; overflow: hidden; display: flex; flex-direction: column">
+<div style="padding: 20px 20px 12px; display: flex; flex-direction: column; gap: 8px; background: {{t.card}}; border-bottom: 1px solid {{t.line}}">
+<div style="display: flex; justify-content: space-between; align-items: center"><h1 style="margin: 0; font-size: 22px; font-weight: 600">שאל על הכסף שלך</h1><a href="{{L.main}}" aria-label="סגור" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: {{t.ink}}"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></a></div>
+<span style="align-self: flex-start; font-size: 13px; background: {{t.soft}}; border-radius: 99px; padding: 5px 12px; color: {{t.muted}}">מסתכל על: תלוש אוקטובר</span>
+</div>
+
+<div style="flex: 1; padding: 18px 16px; display: flex; flex-direction: column; gap: 14px">
+<div style="align-self: flex-start; max-width: 78%; background: {{t.btn}}; color: {{t.btnInk}}; border-radius: 18px 18px 4px 18px; padding: 11px 14px; font-size: 15px; line-height: 1.45">למה הנטו ירד החודש?</div>
+<div style="align-self: flex-end; max-width: 86%; background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 18px 18px 18px 4px; padding: 12px 14px; font-size: 15px; line-height: 1.55; display: flex; flex-direction: column; gap: 8px">
+<span>ירד ב-₪86. שני דברים:</span>
+<span>1. היו לך 4 שעות נוספות פחות מספטמבר, זה ₪152 פחות בברוטו.</span>
+<span>2. מנגד, מס ההכנסה ירד ב-₪66 בגלל זה.</span>
+<span>אז הנטו ירד בגלל השעות הנוספות, לא בגלל טעות.</span>
+<a href="{{L.payslip}}" style="font-size: 14px; text-decoration: none; color: {{t.link}}">ראה את השורות בתלוש</a>
+</div>
+<div style="align-self: flex-start; max-width: 78%; background: {{t.btn}}; color: {{t.btnInk}}; border-radius: 18px 18px 4px 18px; padding: 11px 14px; font-size: 15px; line-height: 1.45">ומה עושים עם הפנסיה שחסרה?</div>
+<div style="align-self: flex-end; max-width: 86%; background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 18px 18px 18px 4px; padding: 12px 14px; font-size: 15px; line-height: 1.55; display: flex; flex-direction: column; gap: 8px">
+<span>הכי פשוט: לשלוח לחשבות מייל קצר. הכנתי לך נוסח, רק צריך להוסיף את השם שלך.</span>
+<a href="#" style="font-size: 14px; text-decoration: none; color: {{t.link}}">פתח את המכתב</a>
+</div>
+</div>
+
+<div style="padding: 0 16px 10px; display: flex; gap: 8px; flex-wrap: wrap">
+<button type="button" style="height: 36px; padding: 0 12px; border-radius: 99px; border: 1px solid {{t.border2}}; background: {{t.card}}; font-family: inherit; font-size: 13px; color: {{t.ink}}">כמה נשאר לי עד סוף החודש?</button>
+<button type="button" style="height: 36px; padding: 0 12px; border-radius: 99px; border: 1px solid {{t.border2}}; background: {{t.card}}; font-family: inherit; font-size: 13px; color: {{t.ink}}">מה זה דמי הבראה?</button>
+</div>
+
+<div style="padding: 10px 16px 22px; background: {{t.card}}; border-top: 1px solid {{t.line}}; display: flex; gap: 10px; align-items: center">
+<label for="msg" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">הודעה</label>
+<input id="msg" type="text" placeholder="למשל: למה שילמתי יותר מס?" style="flex: 1; height: 46px; border-radius: 99px; border: 1px solid {{t.border2}}; padding: 0 16px; font-family: inherit; font-size: 15px; background: {{t.field}}; color: {{t.ink}}">
+<button type="button" aria-label="שלח" style="width: 46px; height: 46px; border-radius: 99px; border: none; background: {{t.btn}}; color: {{t.btnInk}}; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></button>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+const T={light:{bg:'#F6F5F1',card:'#FFFFFF',line:'#E6E3DC',line2:'#EFEDE7',ink:'#1D1C1A',muted:'#5F5C55',link:'#1F4FBF',btn:'#1F4FBF',btnInk:'#FFFFFF',soft:'#F1EFEA',field:'#F6F5F1',border2:'#D6D2C8',inv:'#1D1C1A',invInk:'#F6F5F1',track:'#EFEDE7',fill:'#1D1C1A',rbg:'#FBE8E6',rtx:'#A8231A',obg:'#FCEFD8',otx:'#8F4A00',gtx:'#1B6B3E',bar:'#C9D5F2',ibg:'#EEF2FC',dash:'#C9C5BB',axis:'#8A867D'},dark:{bg:'#141412',card:'#1E1D1B',line:'#2F2D29',line2:'#2A2925',ink:'#EDEBE6',muted:'#A6A29A',link:'#8FB0FF',btn:'#3D6AE0',btnInk:'#FFFFFF',soft:'#2A2925',field:'#141412',border2:'#3A3833',inv:'#2B2A26',invInk:'#EDEBE6',track:'#2A2925',fill:'#EDEBE6',rbg:'#3A1F1C',rtx:'#FF9A8F',obg:'#3A2C15',otx:'#F2B35E',gtx:'#7BD39A',bar:'#34456E',ibg:'#1E2A47',dash:'#4A4741',axis:'#8A867D'}};
+const d = !!this.props.dark;
+const p = d ? 'Dark' : '';
+return { t: d ? T.dark : T.light, L: { main: p + 'Main.dc.html', upload: p + 'Upload.dc.html', payslip: p + 'Payslip.dc.html', compare: p + 'Compare.dc.html', chat: p + 'Chat.dc.html' } };
+}
+}
+</script>
+</body>
+</html>

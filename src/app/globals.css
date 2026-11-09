@@ -1,26 +1,37 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Theme tokens: same values as the approved UI canvas */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #F6F5F1; --card: #FFFFFF; --line: #E6E3DC; --line2: #EFEDE7;
+  --ink: #1D1C1A; --muted: #5F5C55; --link: #1F4FBF; --btn: #1F4FBF; --btn-ink: #FFFFFF;
+  --soft: #F1EFEA; --field: #F6F5F1; --border2: #D6D2C8; --inv: #1D1C1A; --inv-ink: #F6F5F1;
+  --track: #EFEDE7; --fill: #1D1C1A; --rbg: #FBE8E6; --rtx: #A8231A; --obg: #FCEFD8;
+  --otx: #8F4A00; --gtx: #1B6B3E; --bar: #C9D5F2; --ibg: #EEF2FC; --dash: #C9C5BB;
+  --axis: #8A867D; --hot: #E8A54B;
+  color-scheme: light;
+}
+.dark {
+  --bg: #141412; --card: #1E1D1B; --line: #2F2D29; --line2: #2A2925;
+  --ink: #EDEBE6; --muted: #A6A29A; --link: #8FB0FF; --btn: #3D6AE0; --btn-ink: #FFFFFF;
+  --soft: #2A2925; --field: #141412; --border2: #3A3833; --inv: #2B2A26; --inv-ink: #EDEBE6;
+  --track: #2A2925; --fill: #EDEBE6; --rbg: #3A1F1C; --rtx: #FF9A8F; --obg: #3A2C15;
+  --otx: #F2B35E; --gtx: #7BD39A; --bar: #34456E; --ibg: #1E2A47; --dash: #4A4741;
+  --axis: #8A867D; --hot: #E8A54B;
+  color-scheme: dark;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg); --color-card: var(--card); --color-line: var(--line); --color-line2: var(--line2);
+  --color-ink: var(--ink); --color-muted: var(--muted); --color-link: var(--link); --color-btn: var(--btn);
+  --color-btn-ink: var(--btn-ink); --color-soft: var(--soft); --color-field: var(--field);
+  --color-border2: var(--border2); --color-inv: var(--inv); --color-inv-ink: var(--inv-ink);
+  --color-track: var(--track); --color-fill: var(--fill); --color-rbg: var(--rbg); --color-rtx: var(--rtx);
+  --color-obg: var(--obg); --color-otx: var(--otx); --color-gtx: var(--gtx); --color-bar: var(--bar);
+  --color-ibg: var(--ibg); --color-dash: var(--dash); --color-axis: var(--axis); --color-hot: var(--hot);
+  --font-sans: var(--font-rubik), system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+body { background: var(--bg); color: var(--ink); }
+a { -webkit-tap-highlight-color: transparent; }

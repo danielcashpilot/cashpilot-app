@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>CashPilot מעקב חודשי</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#1F4FBF}a:hover{color:#163a8f}
+</style>
+</helmet>
+<div dir="rtl" style="width: 390px; height: 980px; position: relative; box-sizing: border-box; background: {{t.bg}}; font-family: Rubik, system-ui, sans-serif; color: {{t.ink}}; overflow: hidden">
+<div style="padding: 28px 20px 100px; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 26px; font-weight: 600">מעקב</h1>
+<span style="font-size: 15px; color: {{t.muted}}">כמה הוצאת כל חודש, לעומת מה שנכנס</span>
+</div>
+
+<div style="background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; font-size: 13px; color: {{t.muted}}"><span>הוצאות באלפי ₪, מאי עד אוקטובר</span><span>מקווקו = הכנסה</span></div>
+<div style="position: relative; height: 180px; display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; padding: 0 4px; border-bottom: 1px solid {{t.border2}}">
+<div style="position: absolute; left: 0; right: 0; bottom: 149px; border-top: 2px dashed {{t.axis}}"></div>
+<div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px"><span style="font-size: 11px; color: {{t.muted}}">7.8</span><div style="width: 100%; height: 125px; background: {{t.bar}}; border-radius: 6px 6px 0 0"></div></div>
+<div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px"><span style="font-size: 11px; color: {{t.muted}}">8.4</span><div style="width: 100%; height: 134px; background: {{t.bar}}; border-radius: 6px 6px 0 0"></div></div>
+<div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px"><span style="font-size: 11px; color: {{t.otx}}; font-weight: 500">9.6</span><div style="width: 100%; height: 154px; background: #E8A54B; border-radius: 6px 6px 0 0"></div></div>
+<div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px"><span style="font-size: 11px; color: {{t.muted}}">8.9</span><div style="width: 100%; height: 142px; background: {{t.bar}}; border-radius: 6px 6px 0 0"></div></div>
+<div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px"><span style="font-size: 11px; color: {{t.muted}}">7.2</span><div style="width: 100%; height: 115px; background: {{t.bar}}; border-radius: 6px 6px 0 0"></div></div>
+<div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px"><span style="font-size: 11px; color: {{t.ink}}; font-weight: 500">7.4</span><div style="width: 100%; height: 118px; background: {{t.btn}}; border-radius: 6px 6px 0 0"></div></div>
+</div>
+<div style="display: flex; justify-content: space-between; gap: 10px; padding: 0 4px; font-size: 12px; color: {{t.muted}}; text-align: center"><span style="flex: 1">מאי</span><span style="flex: 1">יוני</span><span style="flex: 1">יולי</span><span style="flex: 1">אוג׳</span><span style="flex: 1">ספט׳</span><span style="flex: 1; color: {{t.ink}}; font-weight: 500">אוק׳</span></div>
+<span style="font-size: 14px; color: {{t.muted}}; line-height: 1.5">ביולי הוצאת ₪300 יותר ממה שנכנס. מאז זה ירד.</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 17px; font-weight: 600">מה השתנה מספטמבר</h2>
+<div style="background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 14px">
+<div style="padding: 13px 14px; border-bottom: 1px solid {{t.line2}}; display: flex; justify-content: space-between; font-size: 15px"><span>חשמל</span><span style="color: {{t.otx}}; font-weight: 500">₪86+</span></div>
+<div style="padding: 13px 14px; border-bottom: 1px solid {{t.line2}}; display: flex; justify-content: space-between; font-size: 15px"><span>מבצע הסלולר נגמר בדצמבר</span><span style="color: {{t.otx}}; font-weight: 500">₪30+ לחודש</span></div>
+<div style="padding: 13px 14px; border-bottom: 1px solid {{t.line2}}; display: flex; justify-content: space-between; font-size: 15px"><span>ביטוח רכב חודש</span><span style="color: {{t.rtx}}; font-weight: 500">14%+</span></div>
+<div style="padding: 13px 14px; display: flex; justify-content: space-between; font-size: 15px"><span>סופר</span><span style="color: {{t.gtx}}; font-weight: 500">₪210−</span></div>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 17px; font-weight: 600">לאן הלך הכסף באוקטובר</h2>
+<div style="background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 5px"><div style="display: flex; justify-content: space-between; font-size: 14px"><span>דיור</span><span>₪3,200</span></div><div style="height: 8px; background: {{t.track}}; border-radius: 99px"><div style="width: 100%; height: 100%; background: {{t.fill}}; border-radius: 99px"></div></div></div>
+<div style="display: flex; flex-direction: column; gap: 5px"><div style="display: flex; justify-content: space-between; font-size: 14px"><span>סופר</span><span>₪1,900</span></div><div style="height: 8px; background: {{t.track}}; border-radius: 99px"><div style="width: 59%; height: 100%; background: {{t.fill}}; border-radius: 99px"></div></div></div>
+<div style="display: flex; flex-direction: column; gap: 5px"><div style="display: flex; justify-content: space-between; font-size: 14px"><span>רכב</span><span>₪900</span></div><div style="height: 8px; background: {{t.track}}; border-radius: 99px"><div style="width: 28%; height: 100%; background: {{t.fill}}; border-radius: 99px"></div></div></div>
+<div style="display: flex; flex-direction: column; gap: 5px"><div style="display: flex; justify-content: space-between; font-size: 14px"><span>חשבונות</span><span>₪640</span></div><div style="height: 8px; background: {{t.track}}; border-radius: 99px"><div style="width: 20%; height: 100%; background: {{t.fill}}; border-radius: 99px"></div></div></div>
+<div style="display: flex; flex-direction: column; gap: 5px"><div style="display: flex; justify-content: space-between; font-size: 14px"><span>מנויים</span><span>₪310</span></div><div style="height: 8px; background: {{t.track}}; border-radius: 99px"><div style="width: 10%; height: 100%; background: {{t.fill}}; border-radius: 99px"></div></div></div>
+</div>
+</div>
+</div>
+
+<nav style="position: absolute; bottom: 0; left: 0; right: 0; height: 72px; background: {{t.card}}; border-top: 1px solid {{t.line}}; display: flex; justify-content: space-around; align-items: center">
+<a href="{{L.main}}" style="text-decoration: none; color: {{t.muted}}; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; min-width: 60px; min-height: 44px; justify-content: center"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9H15v-6H9v6H3z"></path></svg>בית</a>
+<a href="{{L.upload}}" style="text-decoration: none; color: {{t.muted}}; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; min-width: 60px; min-height: 44px; justify-content: center"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>הוספה</a>
+<a href="{{L.compare}}" style="text-decoration: none; color: {{t.link}}; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; min-width: 60px; min-height: 44px; justify-content: center"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V11M12 20V5M19 20v-6"></path></svg>מעקב</a>
+<a href="{{L.chat}}" style="text-decoration: none; color: {{t.muted}}; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; min-width: 60px; min-height: 44px; justify-content: center"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"></path></svg>צ'אט</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":980}}'>
+class Component extends DCLogic {
+renderVals() {
+const T={light:{bg:'#F6F5F1',card:'#FFFFFF',line:'#E6E3DC',line2:'#EFEDE7',ink:'#1D1C1A',muted:'#5F5C55',link:'#1F4FBF',btn:'#1F4FBF',btnInk:'#FFFFFF',soft:'#F1EFEA',field:'#F6F5F1',border2:'#D6D2C8',inv:'#1D1C1A',invInk:'#F6F5F1',track:'#EFEDE7',fill:'#1D1C1A',rbg:'#FBE8E6',rtx:'#A8231A',obg:'#FCEFD8',otx:'#8F4A00',gtx:'#1B6B3E',bar:'#C9D5F2',ibg:'#EEF2FC',dash:'#C9C5BB',axis:'#8A867D'},dark:{bg:'#141412',card:'#1E1D1B',line:'#2F2D29',line2:'#2A2925',ink:'#EDEBE6',muted:'#A6A29A',link:'#8FB0FF',btn:'#3D6AE0',btnInk:'#FFFFFF',soft:'#2A2925',field:'#141412',border2:'#3A3833',inv:'#2B2A26',invInk:'#EDEBE6',track:'#2A2925',fill:'#EDEBE6',rbg:'#3A1F1C',rtx:'#FF9A8F',obg:'#3A2C15',otx:'#F2B35E',gtx:'#7BD39A',bar:'#34456E',ibg:'#1E2A47',dash:'#4A4741',axis:'#8A867D'}};
+const d = !!this.props.dark;
+const p = d ? 'Dark' : '';
+return { t: d ? T.dark : T.light, L: { main: p + 'Main.dc.html', upload: p + 'Upload.dc.html', payslip: p + 'Payslip.dc.html', compare: p + 'Compare.dc.html', chat: p + 'Chat.dc.html' } };
+}
+}
+</script>
+</body>
+</html>
