@@ -64,6 +64,7 @@ export default function UploadBox() {
         </div>
         <input ref={fileRef} type="file" accept={ACCEPT} onChange={pick} className="hidden" />
         <input ref={cameraRef} type="file" accept="image/*" capture="environment" onChange={pick} className="hidden" />
+        <span className="text-[13px] leading-normal text-muted">התלוש נקרא אוטומטית ולא נשמר אצלנו.</span>
       </section>
 
       {state.s !== "idle" && (
@@ -73,7 +74,7 @@ export default function UploadBox() {
 
           {state.s === "reading" && (
             <div className="flex flex-col gap-2">
-              <span className="text-[15px]">קורא את התלוש. זה לוקח בערך חצי דקה.</span>
+              <span className="text-[15px]">קורא את התלוש. זה לוקח בערך 10 שניות.</span>
               <div className="h-1.5 overflow-hidden rounded-full bg-track">
                 <div className="h-full w-1/3 animate-pulse rounded-full bg-fill" />
               </div>

@@ -27,11 +27,9 @@ function fromReport(r: Report): Issue[] {
 export default function HomeView() {
   const saved = useSavedReport();
 
-  // With a real payslip, its checks replace the sample payslip rows. Credit card
-  // and electricity rows stay sample data in the demo.
-  const list = saved
-    ? [...fromReport(saved), ...sampleIssues.filter((i) => i.href !== "/payslip")]
-    : sampleIssues;
+  // With a real payslip the home screen shows only the user's own data. Before
+  // any upload it shows the sample, clearly marked as one.
+  const list = saved ? fromReport(saved) : sampleIssues;
   const sorted = sortIssues(list);
   const shown = sorted.slice(0, SHOW);
   const more = sorted.length - shown.length;
@@ -59,17 +57,40 @@ export default function HomeView() {
         </div>
       </div>
 
-      <section className="flex flex-col gap-2.5 rounded-[18px] border border-line bg-card p-[18px]">
-        <span className="text-sm text-muted">נשאר לך החודש</span>
-        <span className="text-[40px] font-semibold tracking-tight">₪3,140</span>
-        <div className="h-2.5 overflow-hidden rounded-full bg-track">
-          <div className="h-full w-[66%] rounded-full bg-fill" />
+      {!saved && (
+        <div className="rounded-[14px] bg-soft px-3.5 py-3 text-sm leading-normal text-muted">
+          זו דוגמה של איך זה ייראה.{" "}
+          <Link href="/upload" className="text-link">העלה תלוש משלך</Link> והבדיקה תהיה שלך.
         </div>
-        <div className="flex justify-between text-[13px] text-muted">
-          <span>הוצאת ₪6,074 מתוך ₪9,214</span>
-          <span>18 ימים למשכורת</span>
-        </div>
-      </section>
+      )}
+
+      {saved ? (
+        <section className="flex flex-col gap-2.5 rounded-[18px] border border-line bg-card p-[18px]">
+          <span className="text-sm text-muted">המשכורת של {slipMonth}{saved.employer ? ` · ${saved.employer}` : ""}</span>
+          {saved.net !== null && (
+            <div className="flex items-baseline gap-2.5">
+              <span className="text-[40px] font-semibold tracking-tight">{ils(saved.net)}</span>
+              <span className="text-[15px] text-muted">נטו</span>
+            </div>
+          )}
+          {saved.gross !== null && <span className="text-[13px] text-muted">ברוטו {ils(saved.gross)}</span>}
+          <Link href="/upload" className="mt-1 rounded-[10px] bg-soft px-3 py-2.5 text-[13px] leading-normal text-muted">
+            רוצה לדעת כמה נשאר לך החודש? <span className="text-link">העלה פירוט אשראי או דף בנק</span>
+          </Link>
+        </section>
+      ) : (
+        <section className="flex flex-col gap-2.5 rounded-[18px] border border-line bg-card p-[18px]">
+          <span className="text-sm text-muted">נשאר לך החודש</span>
+          <span className="text-[40px] font-semibold tracking-tight">₪3,140</span>
+          <div className="h-2.5 overflow-hidden rounded-full bg-track">
+            <div className="h-full w-[66%] rounded-full bg-fill" />
+          </div>
+          <div className="flex justify-between text-[13px] text-muted">
+            <span>הוצאת ₪6,074 מתוך ₪9,214</span>
+            <span>18 ימים למשכורת</span>
+          </div>
+        </section>
+      )}
 
       <div className="flex gap-3.5 rounded-[14px] border border-line bg-card px-3.5 py-3 text-sm font-medium">
         {reds > 0 && <span className="text-rtx">{reds === 1 ? "בעיה אחת" : `${reds} בעיות`}</span>}
@@ -79,6 +100,12 @@ export default function HomeView() {
 
       <section className="flex flex-col gap-2.5">
         <h2 className="text-[17px] font-semibold">מה כדאי לטפל בו</h2>
+        {shown.length === 0 && (
+          <Link href="/payslip" className="rounded-[14px] border border-line bg-card p-3.5 text-[15px]">
+            <span className="text-gtx">הכל נראה בסדר בתלוש.</span>{" "}
+            <span className="text-muted">בדקנו {okCount} דברים ולא מצאנו בעיה.</span>
+          </Link>
+        )}
         {shown.map((i) => {
           const red = i.level === "red";
           const body = (
@@ -119,15 +146,19 @@ export default function HomeView() {
           <Link href="/upload" className="text-sm text-link">הוסף</Link>
         </div>
         <div className="rounded-[14px] border border-line bg-card text-[15px]">
-          <Link href="/payslip" className="flex justify-between border-b border-line2 px-3.5 py-[13px]">
+          <Link href="/payslip" className={`flex justify-between px-3.5 py-[13px] ${saved ? "" : "border-b border-line2"}`}>
             <span>תלוש שכר · {slipMonth}</span><span className={`text-[13px] ${slipStatus.cls}`}>{slipStatus.text}</span>
           </Link>
-          <div className="flex justify-between border-b border-line2 px-3.5 py-[13px]">
-            <span>פירוט אשראי · אוקטובר</span><span className="text-[13px] text-otx">שים לב</span>
-          </div>
-          <div className="flex justify-between px-3.5 py-[13px]">
-            <span>חשבון חשמל · הגיע במייל</span><span className="text-[13px] text-otx">שים לב</span>
-          </div>
+          {!saved && (
+            <>
+              <div className="flex justify-between border-b border-line2 px-3.5 py-[13px]">
+                <span>פירוט אשראי · אוקטובר</span><span className="text-[13px] text-otx">שים לב</span>
+              </div>
+              <div className="flex justify-between px-3.5 py-[13px]">
+                <span>חשבון חשמל · הגיע במייל</span><span className="text-[13px] text-otx">שים לב</span>
+              </div>
+            </>
+          )}
         </div>
       </section>
     </main>

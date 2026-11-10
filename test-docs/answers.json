@@ -1,0 +1,33 @@
+{
+  "_note": "Correct answers for the fake payslips. Fields left out are not checked. issues = expected check ids with their level.",
+  "tlush_test.pdf": {
+    "fields": {
+      "job_percent": 100, "gross_total": 10519.8, "net_pay": 8409.8, "deductions_total": 2110,
+      "base_salary": 10000, "hourly_rate": 54.95, "overtime_total_hours": 4, "overtime_pay": 219.8,
+      "income_tax": 610, "national_insurance": 380, "health_tax": 520, "tax_credit_points": 2.25,
+      "pension_salary": 10000, "pension_employee": 600, "pension_employer": 600, "severance_employer": 600,
+      "study_fund_employee": null, "study_fund_employer": null
+    },
+    "issues": { "overtime": "red", "pension": "red", "points": "orange", "study-fund": "orange" }
+  },
+  "fake_a.pdf": {
+    "fields": {
+      "job_percent": 100, "gross_total": 6568.25, "net_pay": 5839.43, "deductions_total": 728.82,
+      "base_salary": 6097, "hourly_rate": 33.5, "overtime_125_hours": 6, "overtime_pay": 251.25,
+      "national_insurance": 160, "health_tax": 203, "tax_credit_points": 2.25,
+      "pension_salary": 6097, "pension_employee": 365.82, "pension_employer": 396.31, "severance_employer": 304.85,
+      "study_fund_employee": null, "study_fund_employer": null
+    },
+    "issues": { "minwage": "red", "severance": "red", "points": "orange", "study-fund": "orange" }
+  },
+  "fake_b.png": {
+    "fields": {
+      "job_percent": 100, "gross_total": 12480.65, "net_pay": 9870.65, "deductions_total": 2610,
+      "base_salary": 11000, "hourly_rate": 60.44, "overtime_125_hours": 3, "overtime_pay": 226.65,
+      "havraah_pay": 1254, "income_tax": 520, "national_insurance": 610, "health_tax": 545, "tax_credit_points": 3.75,
+      "pension_salary": 11000, "pension_employee": 660, "pension_employer": 715, "severance_employer": 916.3,
+      "study_fund_employee": 275, "study_fund_employer": 825
+    },
+    "issues": {}
+  }
+}

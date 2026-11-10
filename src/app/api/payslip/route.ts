@@ -20,9 +20,9 @@ export async function POST(request: Request) {
 
   try {
     const data = Buffer.from(await file.arrayBuffer());
-    const payslip = await extractPayslip(data, file.type as Media);
-    if (!payslip.is_payslip) return fail(422, "זה לא נראה כמו תלוש שכר");
-    return Response.json({ payslip, report: checkPayslip(payslip) });
+    const { payslip, usage } = await extractPayslip(data, file.type as Media);
+    if (!payslip.is_payslip) return Response.json({ error: "זה לא נראה כמו תלוש שכר", usage }, { status: 422 });
+    return Response.json({ payslip, report: checkPayslip(payslip), usage });
   } catch (err) {
     console.error("[payslip]", err instanceof Anthropic.APIError ? `${err.status} ${err.message}` : err);
     if (err instanceof Anthropic.AuthenticationError) return fail(500, "מפתח ה-API לא תקין");
