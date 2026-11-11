@@ -53,6 +53,8 @@ for (const r of results) {
   for (const e of r.extra) console.log(`    extra  ${e}`);
   // SHOW=1 also prints the gray info cards and yellow tips, to read them.
   if (process.env.SHOW) {
+    const s = r.report.score;
+    if (s) console.log(`    score  ${s.value}${s.next ? ` (fix ${s.next.title} -> ${s.next.to})` : ""} | issues: ${r.report.issues.map((i) => `${i.id}/${i.level}/${i.amount}`).join(", ") || "none"}`);
     for (const i of r.report.info ?? []) console.log(`    info   ${i.title}: ${i.text}${i.rows ? " | " + i.rows.map((x) => `${x.label} ${x.amount}`).join(", ") : ""}`);
     for (const t of r.report.tips ?? []) console.log(`    tip    ${t.title}: ${t.text}`);
   }

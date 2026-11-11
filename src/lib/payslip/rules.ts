@@ -41,7 +41,21 @@ export type Report = {
   owed: number;
   info?: Info[];
   tips?: Tip[];
+  /** 0-100, how correct the payslip is (the employer's work, not the user). */
+  score?: Score;
 };
+
+export type Score = { value: number; next?: { title: string; to: number } };
+
+/** What each problem costs the score: red by the money missing, orange a little. */
+const penalty = (i: Issue) => (i.level === "red" ? 10 + Math.min(15, i.amount / 25) : 5);
+
+export function scoreOf(issues: Issue[]): Score {
+  const value = Math.max(0, Math.round(100 - issues.reduce((s, i) => s + penalty(i), 0)));
+  if (!issues.length) return { value };
+  const worst = issues.reduce((a, b) => (penalty(b) > penalty(a) ? b : a));
+  return { value, next: { title: worst.title, to: Math.min(100, Math.round(value + penalty(worst))) } };
+}
 
 const v = (f: PField) => (f.value === null || Number.isNaN(f.value) ? null : f.value);
 const where = (f: PField) => (f.label ? `"${f.label}"${f.page ? `, עמוד ${f.page}` : ""}` : undefined);
@@ -241,6 +255,7 @@ export function checkPayslip(p: Payslip): Report {
     owed: issues.filter((i) => i.level === "red").reduce((s, i) => s + i.amount, 0),
     info,
     tips,
+    score: scoreOf(issues),
   };
 }
 
@@ -271,6 +286,18 @@ function explain(p: Payslip, issues: Issue[]): { info: Info[]; tips: Tip[] } {
       title: "לאן הלך הכסף",
       text: `מתוך ${ils(gross)} ברוטו נכנסו לך לחשבון ${ils(net)}.` + (mine > 0 ? ` ${ils(mine)} מההפרש לא הלכו לאיבוד: הם נחסכים בשבילך.` : ""),
       rows,
+    });
+  }
+
+  // 1b. What one hour of work brought in (only when the hours are printed).
+  const regHours = v(p.regular_hours);
+  const otHoursAll = (v(p.overtime_125_hours) ?? 0) + (v(p.overtime_150_hours) ?? 0) || (v(p.overtime_total_hours) ?? 0);
+  if (net !== null && gross !== null && regHours && regHours >= 20) {
+    const hoursAll = regHours + otHoursAll;
+    info.push({
+      id: "hour",
+      title: "השעה שלך שווה",
+      text: `עבדת החודש ${Number(hoursAll.toFixed(2))} שעות. כל שעה הכניסה לך בערך ${ils(net / hoursAll)} נטו לחשבון (${ils(gross / hoursAll)} ברוטו).`,
     });
   }
 

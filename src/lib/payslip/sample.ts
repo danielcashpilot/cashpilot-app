@@ -68,4 +68,5 @@ export const sampleReport: Report = {
     },
   ],
   tips: [],
+  score: { value: 60, next: { title: "הפקדה לפנסיה", to: 82 } },
 };

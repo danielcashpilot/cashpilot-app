@@ -5,9 +5,10 @@ import { sampleReport } from "@/lib/payslip/sample";
 import { monthName, useSavedReport } from "@/lib/payslip/store";
 import Feedback from "./Feedback";
 import { BulbIcon, CheckIcon, InfoIcon } from "./icons";
+import { CountUp, MoneyDonut, ScoreCard } from "./Visuals";
 
 const ils = (n: number) => "₪" + Math.round(n).toLocaleString("he-IL");
-const SHOW_INFO = 2;
+const SHOW_INFO = 3;
 
 function IssueCard({ i }: { i: Issue }) {
   const red = i.level === "red";
@@ -18,6 +19,9 @@ function IssueCard({ i }: { i: Issue }) {
         <span className={`flex-none rounded-lg px-2.5 py-1 text-[13px] font-medium ${red ? "bg-rbg text-rtx" : "bg-obg text-otx"}`}>{i.badge}</span>
       </div>
       <p className="text-sm leading-normal text-muted">{i.text}</p>
+      {red && i.amount > 0 && (
+        <p className="text-sm font-medium text-rtx">בערך {ils(i.amount * 12)} בשנה</p>
+      )}
       {i.todo && (
         <p className="rounded-[10px] bg-soft px-3 py-2 text-sm leading-normal">
           <span className="font-medium">מה עושים: </span>
@@ -41,7 +45,7 @@ function IssueCard({ i }: { i: Issue }) {
   );
 }
 
-function InfoCard({ i }: { i: Info }) {
+function InfoCard({ i, net }: { i: Info; net: number | null }) {
   return (
     <section className="flex flex-col gap-1.5 rounded-2xl bg-soft p-4">
       <h3 className="flex items-center gap-2 text-[15px] font-medium text-muted">
@@ -49,6 +53,7 @@ function InfoCard({ i }: { i: Info }) {
         {i.title}
       </h3>
       <p className="text-sm leading-normal text-muted">{i.text}</p>
+      {i.rows && net !== null && <MoneyDonut net={net} rows={i.rows} />}
       {i.rows && (
         <dl className="mt-1 flex flex-col gap-1 text-[13px] text-muted">
           {i.rows.map((r) => (
@@ -107,10 +112,15 @@ export default function PayslipView() {
         {r.ok.length > 0 && <span className="text-gtx">{r.ok.length} בסדר</span>}
       </div>
 
+      {r.score && <ScoreCard s={r.score} />}
+
       {r.owed > 0 && (
         <section className="flex items-center justify-between rounded-[18px] bg-inv px-[18px] py-4 text-inv-ink">
           <span className="text-sm leading-snug">מצאנו כסף<br />שחסר לך בתלוש</span>
-          <span className="text-[28px] font-semibold">{ils(r.owed)}</span>
+          <span className="flex flex-col items-end">
+            <span className="text-[28px] font-semibold"><CountUp to={r.owed} /></span>
+            <span className="text-[13px] opacity-80">בערך {ils(r.owed * 12)} בשנה</span>
+          </span>
         </section>
       )}
 
@@ -150,7 +160,7 @@ export default function PayslipView() {
         <>
           <Label>כדאי לדעת על התלוש שלך</Label>
           {info.slice(0, SHOW_INFO).map((i) => (
-            <InfoCard key={i.id} i={i} />
+            <InfoCard key={i.id} i={i} net={r.net} />
           ))}
           {info.length > SHOW_INFO && (
             <details className="flex flex-col gap-3">
@@ -159,7 +169,7 @@ export default function PayslipView() {
               </summary>
               <div className="flex flex-col gap-3">
                 {info.slice(SHOW_INFO).map((i) => (
-                  <InfoCard key={i.id} i={i} />
+                  <InfoCard key={i.id} i={i} net={r.net} />
                 ))}
               </div>
             </details>
