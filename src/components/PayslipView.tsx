@@ -102,8 +102,8 @@ export default function PayslipView() {
       </div>
 
       <div className="flex items-baseline gap-3.5 rounded-[14px] border border-line bg-card px-3.5 py-3 text-sm font-medium">
-        {reds > 0 && <span className="text-rtx">{reds === 1 ? "בעיה אחת" : `${reds} בעיות`}</span>}
-        {oranges > 0 && <span className="text-otx">{oranges} שווה לבדוק</span>}
+        <span className={reds ? "text-rtx" : "text-muted"}>{reds === 1 ? "בעיה אחת" : `${reds} בעיות`}</span>
+        <span className={oranges ? "text-otx" : "text-muted"}>{oranges} שווה לבדוק</span>
         {r.ok.length > 0 && <span className="text-gtx">{r.ok.length} בסדר</span>}
       </div>
 

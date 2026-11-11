@@ -93,8 +93,8 @@ export default function HomeView() {
       )}
 
       <div className="flex gap-3.5 rounded-[14px] border border-line bg-card px-3.5 py-3 text-sm font-medium">
-        {reds > 0 && <span className="text-rtx">{reds === 1 ? "בעיה אחת" : `${reds} בעיות`}</span>}
-        {oranges > 0 && <span className="text-otx">{oranges} שים לב</span>}
+        <span className={reds ? "text-rtx" : "text-muted"}>{reds === 1 ? "בעיה אחת" : `${reds} בעיות`}</span>
+        <span className={oranges ? "text-otx" : "text-muted"}>{oranges} שים לב</span>
         {okCount > 0 && <span className="text-gtx">{okCount} בסדר</span>}
       </div>
 
