@@ -12,6 +12,20 @@ type State =
   | { s: "error"; name: string; message: string };
 
 const ACCEPT = "application/pdf,image/jpeg,image/png,image/webp";
+const MAX_BYTES = 4 * 1024 * 1024; // the server (Vercel) accepts up to ~4.5MB
+
+/** Phone photos are often 3-8MB. Shrink big images to a JPEG that is still sharp enough to read. */
+async function shrink(file: File): Promise<File> {
+  if (!file.type.startsWith("image/") || file.size <= 1.5 * 1024 * 1024) return file;
+  const img = await createImageBitmap(file);
+  const scale = Math.min(1, 2400 / Math.max(img.width, img.height));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(img.width * scale);
+  canvas.height = Math.round(img.height * scale);
+  canvas.getContext("2d")!.drawImage(img, 0, 0, canvas.width, canvas.height);
+  const blob = await new Promise<Blob | null>((ok) => canvas.toBlob(ok, "image/jpeg", 0.85));
+  return blob ? new File([blob], file.name.replace(/\.\w+$/, "") + ".jpg", { type: "image/jpeg" }) : file;
+}
 
 export default function UploadBox() {
   const [state, setState] = useState<State>({ s: "idle" });
@@ -21,11 +35,13 @@ export default function UploadBox() {
 
   async function send(file: File) {
     setState({ s: "reading", name: file.name });
-    const body = new FormData();
-    body.append("file", file);
     try {
+      const small = await shrink(file);
+      if (small.size > MAX_BYTES) throw new Error("הקובץ גדול מדי (עד 4MB). נסה לצלם את התלוש במקום להעלות את הקובץ.");
+      const body = new FormData();
+      body.append("file", small);
       const res = await fetch("/api/payslip", { method: "POST", body });
-      const json = await res.json();
+      const json = await res.json().catch(() => ({ error: res.status === 413 ? "הקובץ גדול מדי" : "משהו השתבש, נסה שוב" }));
       if (!res.ok) throw new Error(json.error ?? "משהו השתבש");
       saveReport(json.report);
       setState({ s: "done", name: file.name, report: json.report });
