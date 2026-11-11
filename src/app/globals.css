@@ -10,6 +10,7 @@
   --track: #EFEDE7; --fill: #1D1C1A; --rbg: #FBE8E6; --rtx: #A8231A; --obg: #FCEFD8;
   --otx: #8F4A00; --gtx: #1B6B3E; --bar: #C9D5F2; --ibg: #EEF2FC; --dash: #C9C5BB;
   --axis: #8A867D; --hot: #E8A54B;
+  --ybg: #FDF5D3; --ytx: #6B5300; --yln: #EBD98F;
   color-scheme: light;
 }
 .dark {
@@ -19,6 +20,7 @@
   --track: #2A2925; --fill: #EDEBE6; --rbg: #3A1F1C; --rtx: #FF9A8F; --obg: #3A2C15;
   --otx: #F2B35E; --gtx: #7BD39A; --bar: #34456E; --ibg: #1E2A47; --dash: #4A4741;
   --axis: #8A867D; --hot: #E8A54B;
+  --ybg: #2C2814; --ytx: #EBD47A; --yln: #4D4520;
   color-scheme: dark;
 }
 
@@ -30,6 +32,7 @@
   --color-track: var(--track); --color-fill: var(--fill); --color-rbg: var(--rbg); --color-rtx: var(--rtx);
   --color-obg: var(--obg); --color-otx: var(--otx); --color-gtx: var(--gtx); --color-bar: var(--bar);
   --color-ibg: var(--ibg); --color-dash: var(--dash); --color-axis: var(--axis); --color-hot: var(--hot);
+  --color-ybg: var(--ybg); --color-ytx: var(--ytx); --color-yln: var(--yln);
   --font-sans: var(--font-rubik), system-ui, sans-serif;
 }
 

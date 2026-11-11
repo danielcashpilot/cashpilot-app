@@ -21,7 +21,14 @@ export type Issue = {
   /** Shown as "המספר מהתלוש: ₪X · לא נכון?" only when the code is not sure. */
   quiet?: { value: number; label: string | null };
   where?: string;
+  /** "מה עושים": one short next step. */
+  todo?: string;
 };
+
+/** Gray "good to know" card: facts about this payslip, no judgement. */
+export type Info = { id: string; title: string; text: string; rows?: { label: string; amount: number; mine?: boolean }[] };
+/** Yellow tip, always about something printed on this payslip. */
+export type Tip = { id: string; title: string; text: string };
 
 export type Report = {
   employer: string | null;
@@ -32,6 +39,8 @@ export type Report = {
   ok: string[];
   /** Sum of red amounts: money the employer owes this month. */
   owed: number;
+  info?: Info[];
+  tips?: Tip[];
 };
 
 const v = (f: PField) => (f.value === null || Number.isNaN(f.value) ? null : f.value);
@@ -55,6 +64,7 @@ export function checkPayslip(p: Payslip): Report {
         id: "math",
         level: "orange",
         title: "החשבון בתלוש לא מסתדר",
+        todo: "שואלים את מי שמכין את התלושים ממה נובע ההפרש.",
         badge: "שווה לבדוק",
         text: `ברוטו פחות ניכויים יוצא ${ils(gross - ded)}, אבל בבנק אמורים להיכנס ${ils(net)}. לפעמים זה בגלל הטבות שנרשמות בברוטו (כמו רכב או ארוחות), ולפעמים זו טעות.`,
         amount: 0,
@@ -75,8 +85,9 @@ export function checkPayslip(p: Payslip): Report {
         id: "minwage",
         level: "red",
         title: "שכר מינימום",
+        todo: "פונים למעסיק או למי שמכין את התלושים ומבקשים לתקן ולשלם את ההפרש. אפשר להראות לו את הבדיקה הזאת.",
         badge: `חסרים ${ils(missing)}`,
-        text: `שילמו לך ${rate.toFixed(2)} ₪ לשעה. שכר המינימום מאפריל 2026 הוא ${LAW_2026.minWageHourly} ₪ לשעה.`,
+        text: `שילמו לך ${rate.toFixed(2)} ₪ לשעה. שכר המינימום מאפריל 2026 הוא ${LAW_2026.minWageHourly.toFixed(2)} ₪ לשעה.`,
         amount: round(missing),
         quiet: p.hourly_rate.value === null && base !== null ? { value: base, label: p.base_salary.label } : undefined,
         where: where(p.hourly_rate) ?? where(p.base_salary),
@@ -89,6 +100,7 @@ export function checkPayslip(p: Payslip): Report {
         id: "minwage",
         level: "red",
         title: "שכר מינימום",
+        todo: "פונים למעסיק או למי שמכין את התלושים ומבקשים לתקן ולשלם את ההפרש. אפשר להראות לו את הבדיקה הזאת.",
         badge: `חסרים ${ils(missing)}`,
         text: `שכר היסוד למשרה מלאה הוא ${ils(base)}. שכר המינימום מאפריל 2026 הוא ${ils(LAW_2026.minWageMonthly)}.`,
         amount: round(missing),
@@ -112,6 +124,7 @@ export function checkPayslip(p: Payslip): Report {
         id: "overtime",
         level: "red",
         title: "שעות נוספות",
+        todo: "פונים למעסיק או למי שמכין את התלושים ומבקשים לתקן ולשלם את ההפרש. אפשר להראות לו את הבדיקה הזאת.",
         badge: `חסרים ${ils(missing)}`,
         text: `על ${otHours} שעות נוספות שילמו ${ils(otPay)}. לפי החוק מגיע לפחות ${ils(minPay)}: השעתיים הראשונות ביום ב-125% לפחות, ואחריהן 150%.`,
         amount: round(missing),
@@ -133,6 +146,7 @@ export function checkPayslip(p: Payslip): Report {
         level: "orange",
         title: "הפקדה לפנסיה",
         badge: "שווה לבדוק",
+        todo: "אם אתה עובד שם יותר מחצי שנה (או יותר מ-3 חודשים והייתה לך קרן פנסיה קודם), שאל את המעסיק לאיזו קרן הוא מפקיד.",
         text: "לא מצאנו בתלוש הפקדה של המעסיק לפנסיה. בחצי השנה הראשונה בעבודה זה יכול להיות תקין, ואחרי זה המעסיק חייב להפקיד.",
         amount: 0,
       });
@@ -149,6 +163,7 @@ export function checkPayslip(p: Payslip): Report {
             level: "red",
             title: "הפקדה לפנסיה",
             badge: `חסרים ${ils(missing)}`,
+            todo: "מבקשים מהמעסיק לתקן את ההפקדה ולהשלים את מה שחסר. בדוח מקרן הפנסיה רואים כמה הגיע בפועל.",
             text: `המעסיק הפקיד ${pct}% (${ils(employer)}) במקום ${LAW_2026.employerPensionPct}% מהשכר. זה קורה הרבה, ובדרך כלל מתקנים אחרי פנייה אחת.`,
             amount: round(missing),
             quiet: baseIsSure ? undefined : { value: employer, label: p.pension_employer.label },
@@ -165,6 +180,7 @@ export function checkPayslip(p: Payslip): Report {
             id: "severance",
             level: "red",
             title: "הפקדה לפיצויים",
+            todo: "מבקשים מהמעסיק לתקן את ההפקדה ולהשלים את מה שחסר. בדוח מקרן הפנסיה רואים כמה הגיע בפועל.",
             badge: `חסרים ${ils(missing)}`,
             text: `המעסיק הפקיד לפיצויים ${ils(severance)}. לפי החוק מגיע לפחות ${LAW_2026.employerSeverancePct}% מהשכר, כלומר ${ils(expected)}.`,
             amount: round(missing),
@@ -185,6 +201,7 @@ export function checkPayslip(p: Payslip): Report {
         id: "points",
         level: "orange",
         title: "נקודות זיכוי",
+        todo: "אם מגיעות לך עוד נקודות, ממלאים טופס 101 חדש אצל המעסיק. על שנים קודמות אפשר לבקש החזר מס, עד 6 שנים אחורה.",
         badge: "שווה לבדוק",
         text: `רשומות לך ${points}. אישה, הורה, חייל משוחרר או מי שסיים תואר בשנים האחרונות מקבלים יותר. כל נקודה שווה ${ils(LAW_2026.creditPointValue)} בחודש.`,
         amount: LAW_2026.creditPointValue,
@@ -200,6 +217,7 @@ export function checkPayslip(p: Payslip): Report {
       id: "study-fund",
       level: "orange",
       title: "קרן השתלמות",
+      todo: "בודקים מה כתוב בחוזה העבודה, או שואלים את המעסיק אם יש הסכם שמחייב קרן השתלמות.",
       badge: "שווה לבדוק",
       text: "לא מופיעה בתלוש. היא לא חובה לפי החוק, אבל אם הובטחה לך בחוזה או בהסכם, המעסיק צריך להפקיד אותה כל חודש.",
       amount: 0,
@@ -211,6 +229,8 @@ export function checkPayslip(p: Payslip): Report {
   // Problems first, then by money.
   issues.sort((a, b) => (a.level === b.level ? b.amount - a.amount : a.level === "red" ? -1 : 1));
 
+  const { info, tips } = explain(p, issues);
+
   return {
     employer: p.employer_name,
     month: p.month,
@@ -219,5 +239,111 @@ export function checkPayslip(p: Payslip): Report {
     issues,
     ok,
     owed: issues.filter((i) => i.level === "red").reduce((s, i) => s + i.amount, 0),
+    info,
+    tips,
   };
 }
+
+/** Facts (gray) and tips (yellow) about this payslip. Only numbers printed on it; never advice on where to move money. */
+function explain(p: Payslip, issues: Issue[]): { info: Info[]; tips: Tip[] } {
+  const info: Info[] = [];
+  const tips: Tip[] = [];
+  const has = (id: string) => issues.some((i) => i.id.startsWith(id));
+  const gross = v(p.gross_total);
+  const net = v(p.net_pay);
+
+  // 1. Where the money went: gross to net.
+  const rows = [
+    { label: "פנסיה (נשאר שלך)", amount: v(p.pension_employee) ?? 0, mine: true },
+    { label: "קרן השתלמות (נשאר שלך)", amount: v(p.study_fund_employee) ?? 0, mine: true },
+    { label: "מס הכנסה", amount: v(p.income_tax) ?? 0 },
+    { label: "ביטוח לאומי", amount: v(p.national_insurance) ?? 0 },
+    { label: "מס בריאות", amount: v(p.health_tax) ?? 0 },
+  ].filter((r) => r.amount > 0);
+  if (gross !== null && net !== null && rows.length >= 2) {
+    const mine = rows.filter((r) => r.mine).reduce((s, r) => s + r.amount, 0);
+    // Whatever the listed lines don't cover (meals, union fees, loans...).
+    const rest = gross - net - rows.reduce((s, r) => s + r.amount, 0);
+    rows.sort((a, b) => b.amount - a.amount);
+    if (rest > 5) rows.push({ label: "ניכויים אחרים", amount: rest, mine: false });
+    info.push({
+      id: "where",
+      title: "לאן הלך הכסף",
+      text: `מתוך ${ils(gross)} ברוטו נכנסו לך לחשבון ${ils(net)}.` + (mine > 0 ? ` ${ils(mine)} מההפרש לא הלכו לאיבוד: הם נחסכים בשבילך.` : ""),
+      rows,
+    });
+  }
+
+  // 2. What the employer puts aside for you.
+  const pe = v(p.pension_employer) ?? 0;
+  const se = v(p.severance_employer) ?? 0;
+  const sf = v(p.study_fund_employer) ?? 0;
+  const saved = pe + se + sf;
+  if (saved > 0) {
+    const parts = [pe && "פנסיה", se && "פיצויים", sf && "קרן השתלמות"].filter(Boolean) as string[];
+    const list = parts.length > 1 ? parts.slice(0, -1).join(", ") + " ול" + parts[parts.length - 1] : parts[0];
+    info.push({
+      id: "employer",
+      title: "מה המעסיק שם לך בצד",
+      text: `חוץ מהמשכורת, המעסיק מפקיד לך החודש ${ils(saved)} ל${list}. זה בערך ${ils(Math.round((saved * 12) / 100) * 100)} בשנה, והכסף הזה שלך.`,
+    });
+  }
+
+  // 3. דמי הבראה this month.
+  const havraah = v(p.havraah_pay);
+  if (havraah) {
+    info.push({
+      id: "havraah",
+      title: "דמי הבראה",
+      text: `קיבלת החודש ${ils(havraah)} דמי הבראה. בהרבה מקומות עבודה משלמים אותם פעם בשנה, ואז הנטו של החודש הזה גבוה מהרגיל.`,
+    });
+  }
+
+  // 4. Overtime this month.
+  const otPay = v(p.overtime_pay);
+  const otHours = (v(p.overtime_125_hours) ?? 0) + (v(p.overtime_150_hours) ?? 0) || (v(p.overtime_total_hours) ?? 0);
+  const hours = Number(otHours.toFixed(2));
+  if (otPay && otHours) {
+    info.push({
+      id: "overtime",
+      title: "שעות נוספות",
+      text: `שולמו לך ${hours} שעות נוספות, ${ils(otPay)}.${gross !== null ? ` בלעדיהן הברוטו היה ${ils(gross - otPay)}.` : ""}`,
+    });
+  }
+
+  // Tips, most money first. A subject already shown as a problem gets no tip.
+  const deposited = (v(p.pension_employee) ?? 0) + pe + se;
+  if (deposited > 0 && !has("pension") && !has("severance")) {
+    tips.push({
+      id: "pension-arrived",
+      title: "תוודא שהכסף הגיע לפנסיה",
+      text: `לפי התלוש הופקדו לפנסיה החודש ${ils(deposited)}. באזור האישי באתר של קרן הפנסיה, או בדוח שהיא שולחת, אפשר לראות אם הכסף באמת הגיע.`,
+    });
+  }
+  const points = v(p.tax_credit_points);
+  if (points !== null && !has("points")) {
+    tips.push({
+      id: "points-101",
+      title: "כשמשהו משתנה, מעדכנים את המעסיק",
+      text: `רשומות לך ${points} נקודות זיכוי. כשנולד ילד, כשמסיימים תואר או כשמשתחררים מהצבא, ממלאים טופס 101 חדש. כל נקודה שווה ${ils(LAW_2026.creditPointValue)} בחודש.`,
+    });
+  }
+  const sfTotal = (v(p.study_fund_employee) ?? 0) + sf;
+  if (sfTotal > 0) {
+    tips.push({
+      id: "study-fund-6y",
+      title: "קרן ההשתלמות שלך",
+      text: `נכנסים אליה ${ils(sfTotal)} בחודש. 6 שנים אחרי ההפקדה הראשונה אפשר למשוך את הכסף בלי מס. כדאי לבדוק מתי היא נפתחה.`,
+    });
+  }
+  if (otPay && otHours && !has("overtime")) {
+    tips.push({
+      id: "overtime-hours",
+      title: "תשווה לשעות שעבדת",
+      text: `שולמו לך ${hours} שעות נוספות. אם עבדת יותר, כדאי להשוות לדוח הנוכחות שלך.`,
+    });
+  }
+
+  return { info, tips: tips.slice(0, 3) };
+}
+

@@ -31,7 +31,7 @@ async function check(file, key) {
   const gotIssues = Object.fromEntries(json.report.issues.map((i) => [i.id, i.level]));
   const missed = Object.entries(key.issues).filter(([id, lvl]) => gotIssues[id] !== lvl).map(([id, lvl]) => `${id} (${lvl})`);
   const extra = Object.entries(gotIssues).filter(([id]) => !(id in key.issues)).map(([id, lvl]) => `${id} (${lvl})`);
-  return { file, fields, wrongFields, planted: Object.keys(key.issues).length, missed, extra, cost: json.usage?.cost_usd ?? 0 };
+  return { file, fields, wrongFields, planted: Object.keys(key.issues).length, missed, extra, cost: json.usage?.cost_usd ?? 0, report: json.report };
 }
 
 const jobs = [];
@@ -51,6 +51,11 @@ for (const r of results) {
   for (const w of r.wrongFields) console.log(`    wrong  ${w}`);
   for (const m of r.missed) console.log(`    missed ${m}`);
   for (const e of r.extra) console.log(`    extra  ${e}`);
+  // SHOW=1 also prints the gray info cards and yellow tips, to read them.
+  if (process.env.SHOW) {
+    for (const i of r.report.info ?? []) console.log(`    info   ${i.title}: ${i.text}${i.rows ? " | " + i.rows.map((x) => `${x.label} ${x.amount}`).join(", ") : ""}`);
+    for (const t of r.report.tips ?? []) console.log(`    tip    ${t.title}: ${t.text}`);
+  }
 }
 console.log(`\nFields right: ${fields - wrong}/${fields} (${(((fields - wrong) / fields) * 100).toFixed(1)}%)`);
 console.log(`Planted problems found: ${planted - missed}/${planted}`);
