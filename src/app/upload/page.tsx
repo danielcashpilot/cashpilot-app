@@ -14,13 +14,12 @@ export default function Upload() {
         <UploadBox />
 
         <section className="flex flex-col gap-2.5 rounded-[14px] border border-line bg-card p-4">
-          <div className="flex items-center gap-2.5"><MailIcon /><span className="text-base font-medium">או שהמסמכים יגיעו לבד</span></div>
-          <p className="text-sm leading-normal text-muted">חשבונות שמגיעים אליך במייל יעברו לכתובת הזאת. אנחנו לא נכנסים לתיבת המייל שלך.</p>
-          <div className="flex items-center justify-between rounded-[10px] bg-field px-3 py-2.5">
-            <span dir="ltr" className="font-mono text-sm">noa.4821@in.cashpilot.co.il</span>
-            <button type="button" className="h-9 rounded-lg border border-border2 bg-card px-3 text-sm text-ink">העתק</button>
+          {/* Email intake isn't built yet: no address to copy until the real domain exists. */}
+          <div className="flex items-center gap-2.5">
+            <MailIcon /><span className="text-base font-medium">או שהמסמכים יגיעו לבד</span>
+            <span className="rounded-full bg-soft px-2 py-0.5 text-xs text-muted">בקרוב</span>
           </div>
-          <a href="#" className="text-sm text-link">הגדרת העברה אוטומטית · 2 דקות</a>
+          <p className="text-sm leading-normal text-muted">בקרוב תקבל כתובת מייל אישית, וחשבונות שמגיעים אליך במייל יעברו אליה לבד. אנחנו לא ניכנס לתיבת המייל שלך.</p>
         </section>
       </main>
       <BottomNav />
