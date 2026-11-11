@@ -126,7 +126,7 @@ export default function PayslipView() {
           <span className="text-gtx"><CheckIcon size={22} /></span>
           <div className="flex flex-col gap-1">
             <h2 className="text-base font-medium text-gtx">הכל תקין בתלוש</h2>
-            <p className="text-sm leading-normal text-muted">בדקנו {r.ok.length} דברים ולא מצאנו כסף שחסר לך.</p>
+            <p className="text-sm leading-normal text-muted">בדקנו {r.ok.length === 1 ? "דבר אחד" : `${r.ok.length} דברים`} ולא מצאנו כסף שחסר לך.</p>
           </div>
         </section>
       )}
