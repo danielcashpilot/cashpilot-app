@@ -17,6 +17,8 @@ export type YearReport = {
   /** + the tax office owes you, − you may owe tax. null when we can't tell. */
   refund: number | null;
   issues: Issue[];
+  /** The tax paid matches the calculation (no refund, nothing owed). */
+  taxOk: boolean;
   ok: string[];
   info: Info[];
   tips: Tip[];
@@ -27,6 +29,9 @@ export type Report106 = { years: YearReport[]; refund: number };
 // A refund can be asked for 6 years back (till the end of the 6th year).
 const NOW_YEAR = new Date().getFullYear();
 const SMALL = 100; // below this a gap is rounding or something we can't see
+// Minimum deposits by law (צו ההרחבה לפנסיה חובה), percent of the insured salary.
+const MIN = { employer: 6.5, severance: 6, employee: 6 };
+const pct = (n: number) => `${Number(n.toFixed(2))}%`;
 
 function checkYear(year: number, forms: Form106[]): YearReport {
   const issues: Issue[] = [];
@@ -51,6 +56,7 @@ function checkYear(year: number, forms: Form106[]): YearReport {
     : null;
   const refund = calc ? taxPaid - calc.due : null;
   const tooOld = year < NOW_YEAR - 6;
+  let taxOk = false;
 
   // 1. The main check: tax paid vs. tax the law asks for.
   if (!TAX[year]) {
@@ -84,7 +90,35 @@ function checkYear(year: number, forms: Form106[]): YearReport {
       todo: "לא חייבים לעשות כלום עכשיו. אם יש לך עוד טופס 106 מאותה שנה, תעלה אותו ונבדוק שוב. אם לא, כדאי לבדוק עם יועץ מס לפני שמגישים בקשה להחזר.",
     });
   } else {
-    ok.push(`המס שנוכה ב-${year} מתאים לחישוב`);
+    taxOk = true;
+  }
+
+  // 1b. Pension deposit rates, from each form's funds table.
+  for (const f of forms) {
+    const base = v(f.fund_base) ?? v(f.insured_income);
+    if (!base || base <= 0) continue;
+    const who = forms.length > 1 ? ` (${f.employer_name ?? "מעסיק"})` : "";
+    const rate = (x: number | null) => (x === null ? null : (x / base) * 100);
+    const checks: [string, number | null, number, string][] = [
+      ["pension-employer", rate(v(f.pension_employer)), MIN.employer, "הפקדת המעסיק לפנסיה"],
+      ["severance", rate(v(f.severance_employer)), MIN.severance, "הפקדת המעסיק לפיצויים"],
+      ["pension-employee", rate(v(f.pension_employee)), MIN.employee, "ההפקדה שלך לפנסיה"],
+    ];
+    for (const [id, r, min, name] of checks) {
+      if (r === null) continue;
+      if (r >= min - 0.05) ok.push(`${name}: ${pct(r)}${who}`);
+      else
+        issues.push({
+          id,
+          level: "orange",
+          title: name + who,
+          badge: `${pct(r)} במקום ${min}%`,
+          text: `לפי טבלת הקופות בטופס, ${name} השנה היא ${pct(r)} מ-${ils(base)}. החוק דורש לפחות ${min}%. יש הסדרים ישנים שמותר בהם פחות, אז שווה לבדוק.`,
+          amount: ((min - r) / 100) * base,
+          once: true,
+          todo: "תשאל את מחלקת השכר למה האחוז נמוך. אם אין הסדר מיוחד, המעסיק צריך להשלים את ההפרש.",
+        });
+    }
   }
 
   // 2. Facts, no judgement.
@@ -97,11 +131,19 @@ function checkYear(year: number, forms: Form106[]): YearReport {
     { label: "פנסיה (נשאר שלך)", amount: pension, mine: true },
     { label: "קרן השתלמות (נשאר שלך)", amount: studyEmp, mine: true },
   ].filter((r) => r.amount > 0);
+  const overtime = sum(forms, "overtime_special");
+  const expenses = sum(forms, "expenses_cover");
+  const regular = income - overtime - expenses;
   if (income > 0) {
+    const split = overtime > 0 || expenses > 0;
     info.push({
       id: "year",
       title: `השנה שלך ב-${year}`,
-      text: `הרווחת ${ils(income)} ברוטו` + (months ? ` ב-${months} חודשי עבודה (בערך ${ils(income / months)} בחודש).` : ".") +
+      text: `קיבלת ${ils(income)} ברוטו` + (months ? ` ב-${months} חודשי עבודה` : "") +
+        (split
+          ? `: ${ils(regular)} משכורת רגילה` + (overtime > 0 ? `, ${ils(overtime)} שעות נוספות ושכר מיוחד` : "") + (expenses > 0 ? `, ${ils(expenses)} החזר הוצאות` : "") + "."
+          : ".") +
+        (months ? (split ? ` המשכורת הרגילה יצאה בערך ${ils(regular / months)} בחודש.` : ` בערך ${ils(income / months)} בחודש.`) : "") +
         ` ${ils(taxPaid + ni + health)} הלכו למסים ולביטוח לאומי, כלומר ${Math.round(((taxPaid + ni + health) / income) * 100)}% מההכנסה.`,
       rows,
     });
@@ -118,7 +160,11 @@ function checkYear(year: number, forms: Form106[]): YearReport {
     info.push({
       id: "insured",
       title: "על כמה כסף מפקידים לך",
-      text: `ההפקדות לפנסיה${studyEmp > 0 ? " ולקרן ההשתלמות" : ""} חושבו על ${ils(insured)} ולא על כל ${ils(income)}. זה תקין: לא מפקידים על שעות נוספות, החזר הוצאות ותוספות מיוחדות. על ההפרש (${ils(income - insured)}) לא נחסך לך כסף.`,
+      text: `ההפקדות לפנסיה${studyEmp > 0 ? " ולקרן ההשתלמות" : ""} חושבו על ${ils(insured)} ולא על כל ${ils(income)}. זה תקין: לא מפקידים על ` +
+        (overtime > 0 || expenses > 0
+          ? [overtime > 0 && `שעות נוספות ושכר מיוחד (${ils(overtime)})`, expenses > 0 && `החזר הוצאות (${ils(expenses)})`].filter(Boolean).join(" ועל ")
+          : "שעות נוספות, החזר הוצאות ותוספות מיוחדות") +
+        `. על ההפרש (${ils(income - insured)}) לא נחסך לך כסף לפנסיה.`,
     });
   }
   if (calc) {
@@ -126,7 +172,9 @@ function checkYear(year: number, forms: Form106[]): YearReport {
       id: "points",
       title: "נקודות הזיכוי שלך",
       text: `בטופס רשומות ${points} נקודות זיכוי. בשנה מלאה הן שוות ${ils(calc.pointsCredit)} הנחה במס.` +
-        (calc.grossTax <= calc.pointsCredit ? " ההכנסה שלך השנה לא הגיעה לסכום הזה, אז לפי החוק לא היה צריך לשלם מס הכנסה בכלל." : ""),
+        (calc.grossTax <= calc.pointsCredit
+          ? ` המס על ההכנסה שלך השנה, לפני ההנחה, יוצא ${ils(calc.grossTax)}: פחות מההנחה. לכן לפי החוק לא היה צריך לשלם מס הכנסה בכלל.`
+          : ""),
     });
   }
   if (employers.length > 1) {
@@ -141,10 +189,15 @@ function checkYear(year: number, forms: Form106[]): YearReport {
     tips.push({ id: "donations", title: "תרמת השנה?", text: "קבלות על תרומות (מעל ₪200 בשנה, לעמותה מוכרת) מחזירות 35% מהסכום. מוסיפים אותן לבקשת ההחזר." });
   }
   if (employers.length === 1 && months !== null && months < 12) {
-    tips.push({ id: "other-106", title: "עבדת גם במקום אחר באותה שנה?", text: `בטופס הזה רשומים ${months} חודשים. אם עבדת גם אצל מעסיק אחר, תעלה גם את ה-106 שלו: בלי שניהם החישוב לא שלם.` });
+    tips.push({
+      id: "other-106",
+      title: "עבדת גם במקום אחר באותה שנה?",
+      text: `בטופס הזה רשומים ${months} חודשים` + (forms[0].single_job ? " ומשרה יחידה" : "") +
+        `. אם בחודשים האחרים עבדת אצל מעסיק אחר, תעלה גם את ה-106 שלו: בלי שניהם החישוב לא שלם.`,
+    });
   }
 
-  return { year, employers, months, income, taxPaid, calc, refund, issues, ok, info, tips: tips.slice(0, 3) };
+  return { year, employers, months, income, taxPaid, calc, refund, issues, taxOk, ok, info, tips: tips.slice(0, 3) };
 }
 
 /** Group the forms by tax year and check each year. */

@@ -11,11 +11,19 @@
       "credit_points": 2.25,
       "pension_employee": 9000,
       "study_fund_employee": null,
-      "employer_pension_total": 18750,
+      "employer_pension_total": 18000,
       "donations": null,
-      "insured_income": 150000
+      "insured_income": 150000,
+      "fund_base": 150000,
+      "pension_employer": 9000,
+      "severance_employer": 9000,
+      "overtime_special": 0,
+      "expenses_cover": 0,
+      "single_job": true
     },
-    "issues": {},
+    "issues": {
+      "pension-employer": "orange"
+    },
     "refund": 1.6
   },
   "f106_b.pdf": {
@@ -27,12 +35,18 @@
       "national_insurance": 1120,
       "health_tax": 1240,
       "credit_points": 2.75,
-      "pension_employee": 2400,
-      "study_fund_employee": 1000,
-      "employer_pension_total": 5000,
-      "study_fund_employer": 3000,
+      "pension_employee": 2100,
+      "study_fund_employee": 875,
+      "employer_pension_total": 4375,
+      "study_fund_employer": 2625,
       "donations": null,
-      "insured_income": 40000
+      "insured_income": 35000,
+      "fund_base": 35000,
+      "pension_employer": 2275,
+      "severance_employer": 2100,
+      "overtime_special": 4000,
+      "expenses_cover": 1000,
+      "single_job": true
     },
     "issues": {
       "refund": "red"
@@ -51,7 +65,13 @@
       "pension_employee": 13800,
       "employer_pension_total": 34109,
       "donations": 1000,
-      "insured_income": 230000
+      "insured_income": 230000,
+      "fund_base": 230000,
+      "pension_employer": 14950,
+      "severance_employer": 19159,
+      "overtime_special": 0,
+      "expenses_cover": 0,
+      "single_job": true
     },
     "issues": {
       "owe": "orange"

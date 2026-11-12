@@ -47,15 +47,29 @@ export default function Form106View() {
           {y.issues.map((i) => (
             <IssueCard key={i.id} i={i} />
           ))}
-          {y.ok.map((t) => (
-            <section key={t} className="flex gap-3 rounded-2xl border border-gtx/30 bg-card p-4">
+          {y.taxOk && (
+            <section className="flex gap-3 rounded-2xl border border-gtx/30 bg-card p-4">
               <span className="text-gtx"><CheckIcon size={22} /></span>
               <div className="flex flex-col gap-1">
-                <h2 className="text-base font-medium text-gtx">{t}</h2>
+                <h2 className="text-base font-medium text-gtx">המס שנוכה ב-{y.year} מתאים לחישוב</h2>
                 <p className="text-sm leading-normal text-muted">נוכה ממך בערך המס שהיה צריך. לפי הטופס הזה אין החזר.</p>
               </div>
             </section>
-          ))}
+          )}
+          {y.ok.length > 0 && (
+            <details className="rounded-2xl border border-line bg-card text-[15px]">
+              <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-[13px] text-sm">
+                <span className="text-gtx"><CheckIcon /></span>
+                <span>נבדק ונמצא בסדר ({y.ok.length})</span>
+              </summary>
+              {y.ok.map((t) => (
+                <div key={t} className="flex justify-between gap-3 border-t border-line2 px-4 py-3">
+                  <span>{t}</span>
+                  <span className="flex-none text-gtx">בסדר</span>
+                </div>
+              ))}
+            </details>
+          )}
 
           {y.info.length > 0 && <Label>כדאי לדעת</Label>}
           {y.info.map((i) => (

@@ -23,6 +23,12 @@ export const Form106Schema = z.object({
   study_fund_employee: Field.describe("Employee קרן השתלמות deduction for the year."),
   employer_pension_total: Field.describe("Employer contributions to pension funds including severance: field 248/249 (סה\"כ הפרשות המעסיק לקופ\"ג)."),
   study_fund_employer: Field.describe("Employer קרן השתלמות contribution for the year (often in the funds table, הפרשת מעסיק on the קרן השתלמות row)."),
+  overtime_special: Field.describe("Overtime and special pay for the year, in the income classification section (סיווג הכנסות): e.g. \"ש\"נ ושכר מיוחד\", \"שעות נוספות\"."),
+  expenses_cover: Field.describe("Expense reimbursements for the year, in סיווג הכנסות: e.g. \"כיסוי הוצאות\", \"החזר הוצאות\"."),
+  fund_base: Field.describe("In the funds table (פירוט קופות), the salary the pension fund row was figured on (ברוטו להפרשה / שכר להפרשה)."),
+  pension_employer: Field.describe("In the funds table, the employer's amount on the pension row (קופת גמל לקצבה / קרן פנסיה / תגמולים), column הפרשת מעסיק. Not severance."),
+  severance_employer: Field.describe("In the funds table, the employer's amount on the severance row (פיצויים), column הפרשת מעסיק."),
+  single_job: z.boolean().nullable().describe("true if the form says the person worked in a single job (הועסק/ה במשרה יחידה), false if it says more than one job, null if not printed."),
   life_insurance: Field.describe("Life insurance paid by the employee: field 036 (ביטוח חיים), if printed."),
   donations: Field.describe("Donations: field 037 (תרומות), if printed."),
 });
