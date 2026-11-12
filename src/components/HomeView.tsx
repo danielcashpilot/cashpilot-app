@@ -4,6 +4,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import { AlertIcon, WarnIcon } from "@/components/icons";
 import type { Report } from "@/lib/payslip/rules";
 import { monthName, useSavedReport } from "@/lib/payslip/store";
+import { useSaved106 } from "@/lib/form106/store";
 import { issues as sampleIssues, sortIssues, type Issue } from "@/lib/sample";
 
 const SHOW = 4;
@@ -26,6 +27,7 @@ function fromReport(r: Report): Issue[] {
 
 export default function HomeView() {
   const saved = useSavedReport();
+  const f106 = useSaved106();
 
   // With a real payslip the home screen shows only the user's own data. Before
   // any upload it shows the sample, clearly marked as one.
@@ -36,7 +38,8 @@ export default function HomeView() {
   const reds = list.filter((i) => i.level === "red").length;
   const oranges = list.length - reds;
   const okCount = saved ? saved.ok.length : 5;
-  const found = saved ? saved.owed : 1301;
+  // The sample's ₪1,301 only while there is no real data; never mixed with real money.
+  const found = saved || f106 ? (saved?.owed ?? 0) + (f106?.refund ?? 0) : 1301;
 
   const slipReds = saved ? saved.issues.filter((i) => i.level === "red").length : 2;
   const slipStatus =
@@ -133,6 +136,16 @@ export default function HomeView() {
         )}
       </section>
 
+      {!f106 && (
+        <Link href="/upload?kind=106" className="flex items-center justify-between gap-3 rounded-[14px] border border-line bg-card p-3.5">
+          <span className="flex flex-col gap-[3px]">
+            <span className="text-[15px] font-medium">אולי מגיע לך החזר מס</span>
+            <span className="text-[13px] text-muted">העלה טופס 106 ונבדוק את 6 השנים האחרונות</span>
+          </span>
+          <span className="flex-none text-sm text-link">בדוק</span>
+        </Link>
+      )}
+
       {found > 0 && (
         <section className="flex items-center justify-between rounded-[18px] bg-inv px-[18px] py-4 text-inv-ink">
           <span className="text-sm leading-snug">מצאנו לך עד עכשיו<br />כסף שאפשר להחזיר</span>
@@ -149,6 +162,12 @@ export default function HomeView() {
           <Link href="/payslip" className={`flex justify-between px-3.5 py-[13px] ${saved ? "" : "border-b border-line2"}`}>
             <span>תלוש שכר · {slipMonth}</span><span className={`text-[13px] ${slipStatus.cls}`}>{slipStatus.text}</span>
           </Link>
+          {f106 && (
+            <Link href="/form106" className="flex justify-between border-t border-line2 px-3.5 py-[13px]">
+              <span>טופס 106 · {f106.years.map((y) => y.year).join(", ")}</span>
+              <span className={`text-[13px] ${f106.refund > 0 ? "text-gtx" : "text-muted"}`}>{f106.refund > 0 ? `החזר ${ils(f106.refund)}` : "נבדק"}</span>
+            </Link>
+          )}
           {!saved && (
             <>
               <div className="flex justify-between border-b border-line2 px-3.5 py-[13px]">

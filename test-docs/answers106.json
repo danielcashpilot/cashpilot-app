@@ -1,0 +1,15 @@
+{
+  "_note": "Correct answers for the fake 106 forms (made by test-docs/f106_*.html). refund = expected tax refund (+) or tax owed (-).",
+  "f106_a.pdf": {
+    "fields": { "tax_year": 2023, "months_worked": 12, "taxable_income": 150000, "income_tax": 10540, "national_insurance": 5820, "health_tax": 6960, "credit_points": 2.25, "pension_employee": 9000, "study_fund_employee": null, "employer_pension_total": 18750, "donations": null },
+    "issues": {}, "refund": 1.6
+  },
+  "f106_b.pdf": {
+    "fields": { "tax_year": 2022, "months_worked": 5, "taxable_income": 40000, "income_tax": 1850, "national_insurance": 1120, "health_tax": 1240, "credit_points": 2.75, "pension_employee": 2400, "study_fund_employee": 1000, "employer_pension_total": 5000, "study_fund_employer": 3000, "donations": null },
+    "issues": { "refund": "red" }, "refund": 1850
+  },
+  "f106_c.png": {
+    "fields": { "tax_year": 2025, "months_worked": 12, "taxable_income": 230000, "income_tax": 26600, "national_insurance": 14400, "health_tax": 11300, "credit_points": 2.25, "pension_employee": 13800, "employer_pension_total": 34109, "donations": 1000 },
+    "issues": { "owe": "orange" }, "refund": -3038.2
+  }
+}

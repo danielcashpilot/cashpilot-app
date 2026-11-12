@@ -10,7 +10,7 @@ import { CountUp, MoneyDonut, ScoreCard } from "./Visuals";
 const ils = (n: number) => "₪" + Math.round(n).toLocaleString("he-IL");
 const SHOW_INFO = 3;
 
-function IssueCard({ i }: { i: Issue }) {
+export function IssueCard({ i }: { i: Issue }) {
   const red = i.level === "red";
   return (
     <section className={`flex flex-col gap-2 rounded-2xl border bg-card p-4 ${red ? "border-rtx/30" : "border-otx/30"}`}>
@@ -19,7 +19,7 @@ function IssueCard({ i }: { i: Issue }) {
         <span className={`flex-none rounded-lg px-2.5 py-1 text-[13px] font-medium ${red ? "bg-rbg text-rtx" : "bg-obg text-otx"}`}>{i.badge}</span>
       </div>
       <p className="text-sm leading-normal text-muted">{i.text}</p>
-      {red && i.amount > 0 && (
+      {red && i.amount > 0 && !i.once && (
         <p className="text-sm font-medium text-rtx">בערך {ils(i.amount * 12)} בשנה</p>
       )}
       {i.todo && (
@@ -45,7 +45,7 @@ function IssueCard({ i }: { i: Issue }) {
   );
 }
 
-function InfoCard({ i, net }: { i: Info; net: number | null }) {
+export function InfoCard({ i, net }: { i: Info; net: number | null }) {
   return (
     <section className="flex flex-col gap-1.5 rounded-2xl bg-soft p-4">
       <h3 className="flex items-center gap-2 text-[15px] font-medium text-muted">
@@ -68,7 +68,7 @@ function InfoCard({ i, net }: { i: Info; net: number | null }) {
   );
 }
 
-function TipCard({ t }: { t: Tip }) {
+export function TipCard({ t }: { t: Tip }) {
   return (
     <section className="flex flex-col gap-1.5 rounded-2xl border border-yln bg-ybg p-4">
       <h3 className="flex items-center gap-2 text-[15px] font-medium text-ytx">
@@ -80,7 +80,7 @@ function TipCard({ t }: { t: Tip }) {
   );
 }
 
-const Label = ({ children }: { children: React.ReactNode }) => <h2 className="mt-2 text-sm text-muted">{children}</h2>;
+export const Label = ({ children }: { children: React.ReactNode }) => <h2 className="mt-2 text-sm text-muted">{children}</h2>;
 
 export default function PayslipView() {
   const saved = useSavedReport();

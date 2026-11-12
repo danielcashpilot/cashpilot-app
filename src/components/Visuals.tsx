@@ -12,7 +12,8 @@ export function CountUp({ to }: { to: number }) {
     let raf = 0;
     const start = performance.now();
     const step = (t: number) => {
-      const k = Math.min(1, (t - start) / 800);
+      // The first frame's time can be a little before `start`; never go below 0.
+      const k = Math.min(1, Math.max(0, (t - start) / 800));
       setN(to * (1 - Math.pow(1 - k, 3)));
       if (k < 1) raf = requestAnimationFrame(step);
     };

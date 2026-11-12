@@ -23,6 +23,8 @@ export type Issue = {
   where?: string;
   /** "מה עושים": one short next step. */
   todo?: string;
+  /** The amount is a one-time sum (e.g. a tax refund), not per month. */
+  once?: boolean;
 };
 
 /** Gray "good to know" card: facts about this payslip, no judgement. */
