@@ -12,7 +12,7 @@ Rules:
 - Copy only numbers printed on the document. Never calculate or fill in a value. If a field is not printed, return null for value and label.
 - For each value give the exact Hebrew label printed next to it, with the field code (שדה/סעיף) if printed, e.g. "042 מס הכנסה".
 - Amounts are in shekels without the ₪ sign or thousands separators.
-- Fields are often identified by their code: 158/172 taxable salary, 042 income tax, 045/086 employee pension, 248/249 employer pension contributions, 036 life insurance, 037 donations.
+- Fields are often identified by their code: 158/172 taxable salary, 042 income tax, 244/245 insured salary (the pension base), 045/086 employee pension, 248/249 employer pension contributions, 036 life insurance, 037 donations.
 - credit_points is the NUMBER of points (e.g. 2.25), which is often printed inside a label like "ערך נקודות זיכוי 5.75" next to a shekel amount. Return the count, not the shekels.
 - months_worked: use "סה\\"כ חודשי עבודה" if printed; otherwise count the months marked as worked (כן / X).
 - The employer's study fund contribution is usually in the funds table (פירוט קופות) on the קרן השתלמות row, column הפרשת מעסיק.

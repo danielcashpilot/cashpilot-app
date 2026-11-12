@@ -39,12 +39,15 @@ function checkYear(year: number, forms: Form106[]): YearReport {
   const taxPaid = sum(forms, "income_tax");
   const points = Math.max(0, ...forms.map((f) => v(f.credit_points) ?? 0));
   const pension = sum(forms, "pension_employee");
+  const studyEmp = sum(forms, "study_fund_employee");
+  // Pension is figured on the insured salary; without it printed, use the income.
+  const insured = forms.reduce((s, f) => s + (v(f.insured_income) ?? v(f.taxable_income) ?? 0), 0);
   const months = forms.every((f) => f.months_worked === null)
     ? null
     : Math.min(12, forms.reduce((s, f) => s + (f.months_worked ?? 0), 0));
 
   const calc = income > 0 && points > 0
-    ? taxDue(year, { income, points, pension, life: sum(forms, "life_insurance"), donations: sum(forms, "donations") })
+    ? taxDue(year, { income, insured, points, pension, life: sum(forms, "life_insurance"), donations: sum(forms, "donations") })
     : null;
   const refund = calc ? taxPaid - calc.due : null;
   const tooOld = year < NOW_YEAR - 6;
@@ -87,7 +90,6 @@ function checkYear(year: number, forms: Form106[]): YearReport {
   // 2. Facts, no judgement.
   const ni = sum(forms, "national_insurance");
   const health = sum(forms, "health_tax");
-  const studyEmp = sum(forms, "study_fund_employee");
   const rows = [
     { label: "מס הכנסה", amount: taxPaid },
     { label: "ביטוח לאומי", amount: ni },
@@ -110,6 +112,13 @@ function checkYear(year: number, forms: Form106[]): YearReport {
       id: "employer",
       title: "מה המעסיק שם לך בצד השנה",
       text: `${ils(employerSaved)} מעבר למשכורת: ` + (sum(forms, "study_fund_employer") > 0 ? "לפנסיה, לפיצויים ולקרן השתלמות" : "לפנסיה ולפיצויים") + ". הכסף הזה שלך, גם אם לא ראית אותו בחשבון.",
+    });
+  }
+  if (insured > 0 && insured < income * 0.97) {
+    info.push({
+      id: "insured",
+      title: "על כמה כסף מפקידים לך",
+      text: `ההפקדות לפנסיה${studyEmp > 0 ? " ולקרן ההשתלמות" : ""} חושבו על ${ils(insured)} ולא על כל ${ils(income)}. זה תקין: לא מפקידים על שעות נוספות, החזר הוצאות ותוספות מיוחדות. על ההפרש (${ils(income - insured)}) לא נחסך לך כסף.`,
     });
   }
   if (calc) {

@@ -18,6 +18,7 @@ export const Form106Schema = z.object({
   national_insurance: Field.describe("ביטוח לאומי deducted from the employee."),
   health_tax: Field.describe("מס בריאות deducted from the employee."),
   credit_points: Field.describe("Number of tax credit points (נקודות זיכוי), a count like 2.25 or 5.75, NOT shekels. Often printed inside a label like \"ערך נקודות זיכוי 5.75\"."),
+  insured_income: Field.describe("The salary the pension was calculated on for the year: field 244/245 (הכנסה מבוטחת / שכר מבוטח). Often less than the taxable salary (no overtime or expenses)."),
   pension_employee: Field.describe("Employee pension deduction for the year: field 045/086 (קצבה כעמית שכיר / קופת גמל לקצבה)."),
   study_fund_employee: Field.describe("Employee קרן השתלמות deduction for the year."),
   employer_pension_total: Field.describe("Employer contributions to pension funds including severance: field 248/249 (סה\"כ הפרשות המעסיק לקופ\"ג)."),
