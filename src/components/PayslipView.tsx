@@ -10,7 +10,8 @@ import { CountUp, MoneyDonut, ScoreCard } from "./Visuals";
 const ils = (n: number) => "₪" + Math.round(n).toLocaleString("he-IL");
 const SHOW_INFO = 3;
 
-export function IssueCard({ i }: { i: Issue }) {
+/** doc: where the line is, "בתלוש" or "בטופס". */
+export function IssueCard({ i, doc = "בתלוש" }: { i: Issue; doc?: string }) {
   const red = i.level === "red";
   const border = i.good ? "border-gtx/30" : red ? "border-rtx/30" : "border-otx/30";
   const badge = i.good ? "bg-gbg text-gtx" : red ? "bg-rbg text-rtx" : "bg-obg text-otx";
@@ -49,7 +50,7 @@ export function IssueCard({ i }: { i: Issue }) {
       )}
       {i.where && (
         <details className="text-sm">
-          <summary className="cursor-pointer list-none text-link">איפה זה בתלוש</summary>
+          <summary className="cursor-pointer list-none text-link">איפה זה {doc}</summary>
           <p className="pt-1 text-muted">בשורה {i.where}</p>
         </details>
       )}

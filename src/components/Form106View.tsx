@@ -50,7 +50,7 @@ export default function Form106View() {
           <span className="text-sm text-muted">{y.employers.join(" · ")}</span>
 
           {y.issues.map((i) => (
-            <IssueCard key={i.id} i={i} />
+            <IssueCard key={i.id} i={i} doc="בטופס" />
           ))}
           {y.taxOk && (
             <section className="flex gap-3 rounded-2xl border border-gtx/30 bg-card p-4">
