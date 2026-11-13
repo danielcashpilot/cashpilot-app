@@ -25,6 +25,10 @@ export type Issue = {
   todo?: string;
   /** The amount is a one-time sum (e.g. a tax refund), not per month. */
   once?: boolean;
+  /** Details behind "למה ומה עוד חשוב לדעת", closed by default. */
+  more?: string[];
+  /** Good news (e.g. a tax refund): shown green instead of red. */
+  good?: boolean;
 };
 
 /** Gray "good to know" card: facts about this payslip, no judgement. */

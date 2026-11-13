@@ -8,12 +8,14 @@ const B2024: [number, number][] = [[84120, 0.1], [120720, 0.14], [193800, 0.2], 
 
 // The 35% pension credit (סעיף 45א) counts deposits up to 7% of the insured salary
 // (הכנסה מבוטחת, not the whole income), and that salary only up to pensionCap a year.
-// Approximate (9,700 ₪ a month from 2023, 8,800 before); only matters above it.
+// pensionCap × 7% = the yearly deposit cap, from kolzchut "זיכוי ממס הכנסה בגין הפרשות
+// לביטוח פנסיוני" (checked 2026-11-13): 2021 ₪7,308 · 2022 ₪7,476 · 2023 ₪7,896 · 2024-25 ₪8,148.
+// 2020 not on that page: approximate.
 export const TAX: Record<number, Year> = {
   2020: { brackets: [[75960, 0.1], [108960, 0.14], [174960, 0.2], [243120, 0.31], [505920, 0.35], [651600, 0.47]], point: 2628, pensionCap: 105600 },
-  2021: { brackets: [[75480, 0.1], [108360, 0.14], [173880, 0.2], [241680, 0.31], [502920, 0.35], [647640, 0.47]], point: 2616, pensionCap: 105600 },
-  2022: { brackets: [[77400, 0.1], [110880, 0.14], [178080, 0.2], [247440, 0.31], [514920, 0.35], [663240, 0.47]], point: 2676, pensionCap: 105600 },
-  2023: { brackets: [[81480, 0.1], [116760, 0.14], [187440, 0.2], [260520, 0.31], [542160, 0.35], [698280, 0.47]], point: 2820, pensionCap: 116400 },
+  2021: { brackets: [[75480, 0.1], [108360, 0.14], [173880, 0.2], [241680, 0.31], [502920, 0.35], [647640, 0.47]], point: 2616, pensionCap: 104400 },
+  2022: { brackets: [[77400, 0.1], [110880, 0.14], [178080, 0.2], [247440, 0.31], [514920, 0.35], [663240, 0.47]], point: 2676, pensionCap: 106800 },
+  2023: { brackets: [[81480, 0.1], [116760, 0.14], [187440, 0.2], [260520, 0.31], [542160, 0.35], [698280, 0.47]], point: 2820, pensionCap: 112800 },
   2024: { brackets: B2024, point: 2904, pensionCap: 116400 },
   2025: { brackets: B2024, point: 2904, pensionCap: 116400 },
 };

@@ -12,15 +12,27 @@ const SHOW_INFO = 3;
 
 export function IssueCard({ i }: { i: Issue }) {
   const red = i.level === "red";
+  const border = i.good ? "border-gtx/30" : red ? "border-rtx/30" : "border-otx/30";
+  const badge = i.good ? "bg-gbg text-gtx" : red ? "bg-rbg text-rtx" : "bg-obg text-otx";
   return (
-    <section className={`flex flex-col gap-2 rounded-2xl border bg-card p-4 ${red ? "border-rtx/30" : "border-otx/30"}`}>
+    <section className={`flex flex-col gap-2 rounded-2xl border bg-card p-4 ${border}`}>
       <div className="flex items-center justify-between gap-3">
         <h3 className="text-base font-medium">{i.title}</h3>
-        <span className={`flex-none rounded-lg px-2.5 py-1 text-[13px] font-medium ${red ? "bg-rbg text-rtx" : "bg-obg text-otx"}`}>{i.badge}</span>
+        <span className={`flex-none rounded-lg px-2.5 py-1 text-[13px] font-medium ${badge}`}>{i.badge}</span>
       </div>
       <p className="text-sm leading-normal text-muted">{i.text}</p>
       {red && i.amount > 0 && !i.once && (
         <p className="text-sm font-medium text-rtx">בערך {ils(i.amount * 12)} בשנה</p>
+      )}
+      {i.more && i.more.length > 0 && (
+        <details className="text-sm">
+          <summary className="flex min-h-11 cursor-pointer list-none items-center text-link">למה ומה עוד חשוב לדעת</summary>
+          <ul className="flex flex-col gap-2 pb-1 leading-normal text-muted">
+            {i.more.map((m) => (
+              <li key={m}>{m}</li>
+            ))}
+          </ul>
+        </details>
       )}
       {i.todo && (
         <p className="rounded-[10px] bg-soft px-3 py-2 text-sm leading-normal">

@@ -19,12 +19,27 @@
       "severance_employer": 9000,
       "overtime_special": 0,
       "expenses_cover": 0,
-      "single_job": true
+      "single_job": true,
+      "credit_points_value": 6345,
+      "worked_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
     },
     "issues": {
       "pension-employer": "orange"
     },
-    "refund": 1.6
+    "refund": -86.6
   },
   "f106_b.pdf": {
     "fields": {
@@ -46,7 +61,15 @@
       "severance_employer": 2100,
       "overtime_special": 4000,
       "expenses_cover": 1000,
-      "single_job": true
+      "single_job": true,
+      "credit_points_value": 3066,
+      "worked_months": [
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
     },
     "issues": {
       "refund": "red"
@@ -71,7 +94,22 @@
       "severance_employer": 19159,
       "overtime_special": 0,
       "expenses_cover": 0,
-      "single_job": true
+      "single_job": true,
+      "credit_points_value": 6534,
+      "worked_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
     },
     "issues": {
       "owe": "orange"

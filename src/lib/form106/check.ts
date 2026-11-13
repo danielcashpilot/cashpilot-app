@@ -24,10 +24,12 @@ export type YearReport = {
   tips: Tip[];
 };
 
-export type Report106 = { years: YearReport[]; refund: number };
+/** refund: sure refunds (green). maybe: refunds that depend on something we can't see (orange, "up to"). */
+export type Report106 = { years: YearReport[]; refund: number; maybe: number };
 
 // A refund can be asked for 6 years back (till the end of the 6th year).
 const NOW_YEAR = new Date().getFullYear();
+const OTHER = "עבודה אחרת, דמי אבטלה, דמי לידה או מילואים";
 const SMALL = 100; // below this a gap is rounding or something we can't see
 // Minimum deposits by law (צו ההרחבה לפנסיה חובה), percent of the insured salary.
 const MIN = { employer: 6.5, severance: 6, employee: 6 };
@@ -55,7 +57,39 @@ function checkYear(year: number, forms: Form106[]): YearReport {
     ? taxDue(year, { income, insured, points, pension, life: sum(forms, "life_insurance"), donations: sum(forms, "donations") })
     : null;
   const refund = calc ? taxPaid - calc.due : null;
+  const t = TAX[year];
+  // Points that changed during the year: the shekels credited don't match
+  // points × monthly value × months. Then the full-year points are less sure.
+  const pointsValue = sum(forms, "credit_points_value");
+  const expectedValue = t && months ? points * (t.point / 12) * months : 0;
+  const pointsChanged = pointsValue > 0 && expectedValue > 0 && Math.abs(pointsValue / expectedValue - 1) > 0.05;
+  // The credit payroll already gave (shekels) is surely owed; if it covers the tax,
+  // the result doesn't depend on how many points there are for the whole year.
+  const covered = !!calc && pointsValue > 0 && pointsValue + calc.pensionCredit + calc.otherCredit >= calc.grossTax;
+  // Points needed for the tax to come out 0 (the full refund).
+  const breakEven = calc && t ? Math.max(0, (calc.grossTax - calc.pensionCredit - calc.otherCredit) / t.point) : null;
+  // The refund if only the basic points apply (2.25 every resident, 2.75 women).
+  const refundAt = (p: number) =>
+    calc && t ? Math.max(0, taxPaid - Math.max(0, calc.grossTax - p * t.point - calc.pensionCredit - calc.otherCredit)) : 0;
+  const floorText = (p: number, who: string) => {
+    const r = refundAt(p);
+    const debt = calc && t ? Math.max(0, calc.grossTax - p * t.point - calc.pensionCredit - calc.otherCredit) - taxPaid : 0;
+    if (debt >= SMALL) return `עם ${p} נקודות (${who}) לא יגיע החזר, ואפילו ייתכן חוב של בערך ${ils(debt)}`;
+    return r < SMALL ? `עם ${p} נקודות (${who}) לא יגיע החזר` : `עם ${p} נקודות (${who}) ההחזר יהיה בערך ${ils(r)}`;
+  };
   const tooOld = year < NOW_YEAR - 6;
+  // Names of the months not worked (one form only), e.g. "ינואר–אפריל".
+  const MONTHS = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"];
+  const wm = forms.length === 1 ? forms[0].worked_months : null;
+  const off = wm && wm.length > 0 && wm.length < 12 ? [...Array(12).keys()].map((i) => i + 1).filter((m) => !wm.includes(m)) : [];
+  const runs: string[] = [];
+  for (let i = 0; i < off.length; i++) {
+    let j = i;
+    while (j + 1 < off.length && off[j + 1] === off[j] + 1) j++;
+    runs.push(i === j ? MONTHS[off[i] - 1] : `${MONTHS[off[i] - 1]}–${MONTHS[off[j] - 1]}`);
+    i = j;
+  }
+  const missing = runs.join(", ");
   let taxOk = false;
 
   // 1. The main check: tax paid vs. tax the law asks for.
@@ -64,18 +98,39 @@ function checkYear(year: number, forms: Form106[]): YearReport {
   } else if (!calc) {
     info.push({ id: "no-calc", title: "חסר מספר כדי לחשב", text: "לא הצלחנו לקרוא מהטופס את ההכנסה או את נקודות הזיכוי, אז לא חישבנו החזר. נסה להעלות קובץ ברור יותר." });
   } else if (refund! >= SMALL) {
+    const unsure = pointsChanged && !covered && breakEven !== null && breakEven > 2.25;
     issues.push({
       id: "refund",
-      level: tooOld ? "orange" : "red",
+      level: tooOld || unsure ? "orange" : "red",
+      good: !tooOld && !unsure,
       title: `החזר מס ${year}`,
-      badge: `${ils(refund!)}`,
-      text: `לפי הטופס נוכה ממך מס הכנסה של ${ils(taxPaid)}, אבל לפי החוק המס על ההכנסה שלך הוא ${ils(calc.due)}. ההפרש כנראה מגיע לך בחזרה.` +
-        (months !== null && months < 12 ? ` זה קורה הרבה כשעובדים רק ${months} חודשים בשנה: המעסיק מחשב מס כאילו עבדת כל השנה.` : ""),
+      badge: unsure ? `עד ${ils(refund!)}` : `${ils(refund!)}`,
+      text: `נוכה ממך מס הכנסה של ${ils(taxPaid)}. לפי החישוב שלנו, לפי הטופס בלבד, המס על ההכנסה שלך יוצא ${ils(calc.due)}, אז ההפרש כנראה מגיע לך בחזרה.` +
+        (unsure ? " הסכום תלוי בכמה נקודות זיכוי מגיעות לך, ולכן הוא \"עד\"." : ""),
+      more: [
+        ...(months !== null && months < 12
+          ? [
+              covered
+                ? `למה: עבדת רק ${months} חודשים. המעסיק חישב מס לפי מדרגות חודשיות על החודשים שעבדת, ובחישוב השנתי המדרגות פרוסות על כל השנה, אז המס יוצא נמוך יותר.`
+                : `למה: עבדת רק ${months} חודשים. המעסיק נתן לך מדרגות מס ונקודות זיכוי רק על החודשים שעבדת, ובחישוב השנתי רוב הנקודות מגיעות לך על כל השנה.`,
+              ...(covered
+                ? ["ההחזר לא תלוי בנקודות נוספות: הנקודות שהמעסיק כבר נתן לך מכסות את כל המס של השנה."]
+                : []),
+              `זה נכון רק אם ${missing ? `ב${missing}` : "בשאר החודשים"} לא הייתה לך הכנסה אחרת (${OTHER}). תשלומים מביטוח לאומי יכולים להקטין את ההחזר, להגדיל אותו (אם נוכה מהם מס) או אפילו ליצור חוב. אם היו כאלה, כדאי להוריד מאתר ביטוח לאומי אישור שנתי על ניכוי מס ולצרף אותו.`,
+            ]
+          : []),
+        ...(unsure
+          ? [
+              `נראה שבחלק מהחודשים קיבלת פחות נקודות זיכוי. ההחזר המלא נכון רק אם מגיעות לך לפחות ${Number(breakEven!.toFixed(2))} נקודות בכל השנה.`,
+              `לכל תושב יש לפחות 2.25 נקודות ולאישה 2.75, ויש עוד על ילדים, תואר או שחרור מצה"ל. ${floorText(2.25, "בסיס")}; ${floorText(2.75, "בסיס לאישה")}.`,
+            ]
+          : []),
+      ],
       amount: refund!,
       once: true,
       todo: tooOld
         ? `עבר זמן: אפשר לבקש החזר רק 6 שנים אחורה, ו-${year} כבר מחוץ לטווח.`
-        : "מגישים בקשה להחזר מס (טופס 135) באזור האישי באתר רשות המסים, ומצרפים את טופס 106. אפשר לבקש עד 6 שנים אחורה, וזה בחינם.",
+        : "מגישים בקשה להחזר מס (טופס 135) באזור האישי באתר רשות המסים, ומצרפים את טופס 106. אפשר לבקש עד 6 שנים אחורה, וזה בחינם. ההחזר משולם עם הצמדה וריבית.",
       where: forms[0].income_tax.label ?? undefined,
     });
   } else if (refund! <= -SMALL) {
@@ -87,7 +142,7 @@ function checkYear(year: number, forms: Form106[]): YearReport {
       text: `לפי החישוב היה צריך לנכות ${ils(calc.due)} מס הכנסה, ונוכו ${ils(taxPaid)}. זה קורה כשעובדים אצל שני מעסיקים בלי תיאום מס.`,
       amount: -refund!,
       once: true,
-      todo: "לא חייבים לעשות כלום עכשיו. אם יש לך עוד טופס 106 מאותה שנה, תעלה אותו ונבדוק שוב. אם לא, כדאי לבדוק עם יועץ מס לפני שמגישים בקשה להחזר.",
+      todo: "לא חייבים לעשות כלום עכשיו. אם יש לך עוד טופס 106 מאותה שנה, כדאי להעלות אותו ונבדוק שוב. אם לא, כדאי לבדוק עם יועץ מס לפני שמגישים בקשה להחזר.",
     });
   } else {
     taxOk = true;
@@ -106,7 +161,7 @@ function checkYear(year: number, forms: Form106[]): YearReport {
     ];
     for (const [id, r, min, name] of checks) {
       if (r === null) continue;
-      if (r >= min - 0.05) ok.push(`${name}: ${pct(r)}${who}`);
+      if (r >= min - 0.05) ok.push(`${name}: ${pct(r)}${r > min + 0.5 ? ` (מעל המינימום של ${min}%${id === "severance" && r >= 8.3 ? ", פיצויים מלאים" : ""})` : " (המינימום בחוק)"}${who}`);
       else
         issues.push({
           id,
@@ -116,7 +171,7 @@ function checkYear(year: number, forms: Form106[]): YearReport {
           text: `לפי טבלת הקופות בטופס, ${name} השנה היא ${pct(r)} מ-${ils(base)}. החוק דורש לפחות ${min}%. יש הסדרים ישנים שמותר בהם פחות, אז שווה לבדוק.`,
           amount: ((min - r) / 100) * base,
           once: true,
-          todo: "תשאל את מחלקת השכר למה האחוז נמוך. אם אין הסדר מיוחד, המעסיק צריך להשלים את ההפרש.",
+          todo: "כדאי לשאול את מחלקת השכר למה האחוז נמוך. אם אין הסדר מיוחד, המעסיק צריך להשלים את ההפרש.",
         });
     }
   }
@@ -134,17 +189,20 @@ function checkYear(year: number, forms: Form106[]): YearReport {
   const overtime = sum(forms, "overtime_special");
   const expenses = sum(forms, "expenses_cover");
   const regular = income - overtime - expenses;
+  // Part of the insured-salary gap the form doesn't explain (not overtime, not expenses).
+  const unexplained = overtime + expenses > 0 ? income - insured - overtime - expenses : 0;
   if (income > 0) {
     const split = overtime > 0 || expenses > 0;
     info.push({
       id: "year",
       title: `השנה שלך ב-${year}`,
-      text: `קיבלת ${ils(income)} ברוטו` + (months ? ` ב-${months} חודשי עבודה` : "") +
+      text: `ההכנסה החייבת במס שלך (ברוטו) הייתה ${ils(income)}` + (months ? ` ב-${months} חודשי עבודה` : "") +
         (split
-          ? `: ${ils(regular)} משכורת רגילה` + (overtime > 0 ? `, ${ils(overtime)} שעות נוספות ושכר מיוחד` : "") + (expenses > 0 ? `, ${ils(expenses)} החזר הוצאות` : "") + "."
+          ? `: ${ils(regular)} משכורת רגילה${unexplained > 300 ? " ותשלומים אחרים" : ""}` + (overtime > 0 ? `, ${ils(overtime)} שעות נוספות ושכר מיוחד` : "") + (expenses > 0 ? `, ${ils(expenses)} החזר הוצאות (לא משכורת, אבל גם הוא נכלל בהכנסה החייבת במס)` : "") + "."
           : ".") +
-        (months ? (split ? ` המשכורת הרגילה יצאה בערך ${ils(regular / months)} בחודש.` : ` בערך ${ils(income / months)} בחודש.`) : "") +
-        ` ${ils(taxPaid + ni + health)} הלכו למסים ולביטוח לאומי, כלומר ${Math.round(((taxPaid + ni + health) / income) * 100)}% מההכנסה.`,
+        (months ? (split ? ` ${unexplained > 300 ? "המשכורת הרגילה והתשלומים האחרים יצאו" : "המשכורת הרגילה יצאה"} בערך ${ils(regular / months)} בחודש.` : ` בערך ${ils(income / months)} בחודש.`) : "") +
+        ` ${ils(taxPaid + ni + health)} הלכו למסים ולביטוח לאומי, כלומר ${Math.round(((taxPaid + ni + health) / income) * 100)}% מההכנסה` +
+        (refund !== null && refund >= SMALL ? " (ייתכן שחלק ממס ההכנסה יחזור; ביטוח לאומי ומס בריאות לא חוזרים)." : "."),
       rows,
     });
   }
@@ -153,27 +211,36 @@ function checkYear(year: number, forms: Form106[]): YearReport {
     info.push({
       id: "employer",
       title: "מה המעסיק שם לך בצד השנה",
-      text: `${ils(employerSaved)} מעבר למשכורת: ` + (sum(forms, "study_fund_employer") > 0 ? "לפנסיה, לפיצויים ולקרן השתלמות" : "לפנסיה ולפיצויים") + ". הכסף הזה שלך, גם אם לא ראית אותו בחשבון.",
+      text: `${ils(employerSaved)} מעבר למשכורת: ` + (sum(forms, "study_fund_employer") > 0 ? "לפנסיה, לפיצויים ולקרן השתלמות" : "לפנסיה ולפיצויים") +
+        ". הכסף לפנסיה" + (sum(forms, "study_fund_employer") > 0 ? " ולקרן ההשתלמות" : "") + " שלך, גם אם לא ראית אותו בחשבון" +
+        (sum(forms, "study_fund_employer") > 0 ? " (הפנסיה נשמרת לפרישה; קרן ההשתלמות פתוחה למשיכה אחרי 6 שנים)." : " (הוא נשמר לפרישה).") +
+        " כספי הפיצויים שלך בוודאות רק אם יש לך הסדר סעיף 14 (אפשר לשאול את מחלקת השכר); בלי הסדר כזה, הם תלויים באיך שהעבודה נגמרת.",
     });
   }
   if (insured > 0 && insured < income * 0.97) {
     info.push({
       id: "insured",
       title: "על כמה כסף מפקידים לך",
-      text: `ההפקדות לפנסיה${studyEmp > 0 ? " ולקרן ההשתלמות" : ""} חושבו על ${ils(insured)} ולא על כל ${ils(income)}. זה תקין: לא מפקידים על ` +
+      text: `ההפקדות לפנסיה${studyEmp > 0 ? " ולקרן ההשתלמות" : ""} חושבו על ${ils(insured)} ולא על כל ${ils(income)}. ${unexplained > 300 ? "רוב זה תקין" : "זה תקין"}: לא מפקידים על ` +
         (overtime > 0 || expenses > 0
-          ? [overtime > 0 && `שעות נוספות ושכר מיוחד (${ils(overtime)})`, expenses > 0 && `החזר הוצאות (${ils(expenses)})`].filter(Boolean).join(" ועל ")
+          ? [overtime > 0 && `שעות נוספות ושכר מיוחד (${ils(overtime)})`, expenses > 0 && `כיסוי הוצאות (${ils(expenses)})`].filter(Boolean).join(" ועל ")
           : "שעות נוספות, החזר הוצאות ותוספות מיוחדות") +
-        `. על ההפרש (${ils(income - insured)}) לא נחסך לך כסף לפנסיה.`,
+        `. על ההפרש (${ils(income - insured)}) לא נחסך לך כסף לפנסיה.` +
+        (overtime + expenses > 0 && unexplained > 300
+          ? ` ${ils(overtime + expenses)} מההפרש מוסברים בטופס; עוד בערך ${ils(unexplained)} לא מפורטים בו (אולי מתנות, פדיון חופשה או הטבות). אפשר לשאול את מחלקת השכר.`
+          : ""),
     });
   }
   if (calc) {
     info.push({
       id: "points",
       title: "נקודות הזיכוי שלך",
-      text: `בטופס רשומות ${points} נקודות זיכוי. בשנה מלאה הן שוות ${ils(calc.pointsCredit)} הנחה במס.` +
+      text: `בטופס רשומות ${points} נקודות זיכוי (כל תושב מקבל 2.25, אישה עוד 0.5, והשאר בדרך כלל על ילדים, תואר או שחרור מצה"ל). אם כל הנקודות מגיעות לך על כל השנה, הן שוות ${ils(calc.pointsCredit)} הנחה במס.` +
+
         (calc.grossTax <= calc.pointsCredit
-          ? ` המס על ההכנסה שלך השנה, לפני ההנחה, יוצא ${ils(calc.grossTax)}: פחות מההנחה. לכן לפי החוק לא היה צריך לשלם מס הכנסה בכלל.`
+          ? ` המס על ההכנסה שלך השנה, לפני ההנחה, יוצא ${ils(calc.grossTax)}: פחות מההנחה.` +
+            (covered ? ` גם הנקודות שהמעסיק כבר נתן לך (${ils(pointsValue)}) מספיקות לזה.` : " זה נכון אם הנקודות מגיעות לך כל השנה.") +
+            ` לכן, לפי הטופס בלבד` + (months !== null && months < 12 ? " ובתנאי שבחודשים שלא עבדת לא הייתה לך הכנסה אחרת" : "") + `, כנראה לא היה צריך לשלם מס הכנסה בכלל.`
           : ""),
     });
   }
@@ -193,7 +260,7 @@ function checkYear(year: number, forms: Form106[]): YearReport {
       id: "other-106",
       title: "עבדת גם במקום אחר באותה שנה?",
       text: `בטופס הזה רשומים ${months} חודשים` + (forms[0].single_job ? " ומשרה יחידה" : "") +
-        `. אם בחודשים האחרים עבדת אצל מעסיק אחר, תעלה גם את ה-106 שלו: בלי שניהם החישוב לא שלם.`,
+        (missing ? ` (לא עבדת כאן ב${missing})` : "") + `. אם בחודשים האחרים עבדת אצל מעסיק אחר, כדאי להעלות גם את ה-106 שלו. אם קיבלת מביטוח לאומי דמי אבטלה, דמי לידה או מילואים, גם הם נספרים בחישוב השנתי: הם יכולים להקטין את ההחזר, להגדיל אותו או ליצור חוב. את האישור השנתי על ניכוי מס מורידים מאתר ביטוח לאומי.`,
     });
   }
 
@@ -217,6 +284,7 @@ export function check106(forms: Form106[]): Report106 {
   const years = [...byYear.entries()]
     .map(([y, fs]) => checkYear(y, fs))
     .sort((a, b) => hasRefund(b) - hasRefund(a) || b.year - a.year);
-  const refund = years.reduce((s, y) => s + (y.issues.some((i) => i.id === "refund" && i.level === "red") ? y.refund! : 0), 0);
-  return { years, refund };
+  const total = (level: string) =>
+    years.reduce((s, y) => s + (y.issues.some((i) => i.id === "refund" && i.level === level) ? y.refund! : 0), 0);
+  return { years, refund: total("red"), maybe: total("orange") };
 }

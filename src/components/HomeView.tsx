@@ -165,7 +165,9 @@ export default function HomeView() {
           {f106 && (
             <Link href="/form106" className="flex justify-between border-t border-line2 px-3.5 py-[13px]">
               <span>טופס 106 · {f106.years.map((y) => y.year).join(", ")}</span>
-              <span className={`text-[13px] ${f106.refund > 0 ? "text-gtx" : "text-muted"}`}>{f106.refund > 0 ? `החזר ${ils(f106.refund)}` : "נבדק"}</span>
+              <span className={`text-[13px] ${f106.refund > 0 ? "text-gtx" : f106.maybe > 0 ? "text-otx" : "text-muted"}`}>
+                {f106.refund > 0 ? `החזר ${ils(f106.refund)}` : f106.maybe > 0 ? `אולי החזר עד ${ils(f106.maybe)}` : "נבדק"}
+              </span>
             </Link>
           )}
           {!saved && (

@@ -13,7 +13,7 @@ Rules:
 - For each value give the exact Hebrew label printed next to it, with the field code (שדה/סעיף) if printed, e.g. "042 מס הכנסה".
 - Amounts are in shekels without the ₪ sign or thousands separators.
 - Fields are often identified by their code: 158/172 taxable salary, 042 income tax, 244/245 insured salary (the pension base), 045/086 employee pension, 248/249 employer pension contributions, 036 life insurance, 037 donations.
-- credit_points is the NUMBER of points (e.g. 2.25), which is often printed inside a label like "ערך נקודות זיכוי 5.75" next to a shekel amount. Return the count, not the shekels.
+- credit_points is the NUMBER of points (e.g. 2.25), which is often printed inside a label like "ערך נקודות זיכוי 5.75" next to a shekel amount. Return the count in credit_points, and the shekel amount on that line in credit_points_value.
 - months_worked: use "סה\\"כ חודשי עבודה" if printed; otherwise count the months marked as worked (כן / X).
 - The income classification section (סיווג הכנסות) splits the salary: overtime and special pay (ש"נ ושכר מיוחד) and expense reimbursements (כיסוי הוצאות). Copy both.
 - In the funds table (פירוט קופות) each row is one fund: read the employer amount (הפרשת מעסיק) of the pension row and of the severance row, and the salary column (ברוטו להפרשה) of the pension row.

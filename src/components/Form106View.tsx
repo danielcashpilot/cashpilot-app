@@ -37,6 +37,11 @@ export default function Form106View() {
           <span className="text-sm leading-snug">כנראה מגיע לך<br />החזר מס של</span>
           <span className="text-[28px] font-semibold"><CountUp to={r.refund} /></span>
         </section>
+      ) : r.maybe > 0 ? (
+        <section className="flex items-center justify-between rounded-[18px] border border-otx/30 bg-card px-[18px] py-4">
+          <span className="text-sm leading-snug">אולי מגיע לך<br />החזר מס של עד</span>
+          <span className="text-[28px] font-semibold text-otx"><CountUp to={r.maybe} /></span>
+        </section>
       ) : null}
 
       {r.years.map((y) => (
@@ -84,7 +89,7 @@ export default function Form106View() {
       ))}
 
       <p className="mt-2 text-[13px] leading-normal text-muted">
-        החישוב לפי טופס 106 בלבד ולפי מדרגות המס של אותה שנה. אם היו לך הכנסות אחרות (שכירות, עסק, ריבית), הסכום יכול להשתנות. זה מידע, לא ייעוץ מס.
+        החישוב לפי טופס 106 בלבד ולפי מדרגות המס של אותה שנה. אם היו לך הכנסות אחרות (תשלומים מביטוח לאומי, שכירות, עסק, ריבית), הסכום יכול להשתנות. זה מידע, לא ייעוץ מס.
       </p>
     </main>
   );

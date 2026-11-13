@@ -11,6 +11,7 @@ export const Form106Schema = z.object({
   is_form106: z.boolean().describe("true only if this document is an Israeli טופס 106 (yearly employer tax summary)."),
   tax_year: z.number().int().nullable().describe("שנת המס, e.g. 2024."),
   employer_name: z.string().nullable(),
+  worked_months: z.array(z.number().int()).nullable().describe("The month numbers (1-12) marked as worked in the months table (כן / X), e.g. [5,6,7,8,9,10,11,12]. null if there is no months table."),
   months_worked: z.number().int().nullable().describe("How many months the person worked for this employer that year (סה\"כ חודשי עבודה, or count the months marked as worked)."),
 
   taxable_income: Field.describe("Total taxable salary: field 158/172 (משכורת / סה\"כ תשלומים חייבים). Not the National Insurance salary."),
@@ -18,6 +19,7 @@ export const Form106Schema = z.object({
   national_insurance: Field.describe("ביטוח לאומי deducted from the employee."),
   health_tax: Field.describe("מס בריאות deducted from the employee."),
   credit_points: Field.describe("Number of tax credit points (נקודות זיכוי), a count like 2.25 or 5.75, NOT shekels. Often printed inside a label like \"ערך נקודות זיכוי 5.75\"."),
+  credit_points_value: Field.describe("The SHEKEL amount printed next to the credit points line (e.g. the 10,352 in \"ערך נקודות זיכוי 5.75 ... 10,352\"): the credit actually given in the year."),
   insured_income: Field.describe("The salary the pension was calculated on for the year: field 244/245 (הכנסה מבוטחת / שכר מבוטח). Often less than the taxable salary (no overtime or expenses)."),
   pension_employee: Field.describe("Employee pension deduction for the year: field 045/086 (קצבה כעמית שכיר / קופת גמל לקצבה)."),
   study_fund_employee: Field.describe("Employee קרן השתלמות deduction for the year."),

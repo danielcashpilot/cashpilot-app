@@ -8,7 +8,8 @@ import path from "node:path";
 const API = process.env.API ?? "http://localhost:3000/api/form106";
 const SETS = ["test-docs/answers106.json", "test-docs/real/answers106.json"].filter(existsSync);
 const TYPES = { ".pdf": "application/pdf", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg" };
-const same = (got, want) => (want === null ? got == null : got != null && Math.abs(got - want) < 0.015);
+const same = (got, want) =>
+  Array.isArray(want) ? JSON.stringify(got) === JSON.stringify(want) : want === null ? got == null : got != null && Math.abs(got - want) < 0.015;
 
 async function check(file, key) {
   const body = new FormData();
@@ -21,7 +22,7 @@ async function check(file, key) {
   let fields = 0;
   for (const [name, want] of Object.entries(key.fields)) {
     fields++;
-    const got = form[name] !== null && typeof form[name] === "object" ? form[name].value : form[name];
+    const got = form[name] !== null && typeof form[name] === "object" && !Array.isArray(form[name]) ? form[name].value : form[name];
     if (!same(got, want)) wrong.push(`${name}: got ${got}, want ${want}`);
   }
   const y = json.report.years[0];

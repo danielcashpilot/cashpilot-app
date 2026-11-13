@@ -145,7 +145,7 @@ export default function UploadBox({ start = "payslip" }: { start?: Kind }) {
             <>
               <span className="text-[15px]">
                 זיהינו: <b className="font-semibold">טופס 106, {state.report.years.map((y) => y.year).join(", ")}</b>
-                {state.report.refund > 0 && <span className="text-gtx"> · כנראה מגיע לך החזר</span>}
+                {state.report.refund > 0 ? <span className="text-gtx"> · כנראה מגיע לך החזר</span> : (state.report.maybe ?? 0) > 0 && <span className="text-otx"> · אולי מגיע לך החזר</span>}
               </span>
               <Link href="/form106" className="flex h-11 items-center justify-center rounded-xl bg-fill text-[15px] font-medium text-bg">פתח את הבדיקה</Link>
             </>
